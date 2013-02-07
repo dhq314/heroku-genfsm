@@ -10,4 +10,6 @@
 init([]) -> {ok, undefined}.
 
 to_html(ReqData, State) ->
-    {"<html><body><h2 style='text-align: center;'>Hi, welcome to my heroku erlang app!<h2></body></html>", ReqData, State}.
+    {ok, Html} = genfsm_dtl:render([{param, "genfsm"}]),
+    {Html, ReqData, State}.
+    %{"<html><body><h2 style='text-align: center;'>Hi, welcome to my heroku erlang app!<h2></body></html>", ReqData, State}.

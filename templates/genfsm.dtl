@@ -1,0 +1,5 @@
+<html>
+<body>
+    <h2 style='text-align: center;'>Hi, welcome to my heroku erlang app -- {{param}}!<h2>
+</body>
+</html>
