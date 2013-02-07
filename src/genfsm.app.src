@@ -1,0 +1,18 @@
+%%-*- mode: erlang -*-
+{application, genfsm,
+ [
+  {description, "genfsm"},
+  {vsn, "1"},
+  {modules, []},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib,
+                  inets,
+                  crypto,
+                  mochiweb,
+                  webmachine
+                 ]},
+  {mod, { genfsm_app, []}},
+  {env, []}
+ ]}.
