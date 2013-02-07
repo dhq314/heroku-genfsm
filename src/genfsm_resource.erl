@@ -10,4 +10,4 @@
 init([]) -> {ok, undefined}.
 
 to_html(ReqData, State) ->
-    {"<html><body>Hello, new world</body></html>", ReqData, State}.
+    {"<html><body><h2 style='text-align: center;'>Hi, welcome to my heroku erlang app!<h2></body></html>", ReqData, State}.
