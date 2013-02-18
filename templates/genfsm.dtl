@@ -1,9 +1,14 @@
+<!DOCTYPE html>
 <html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>genfsm</title>
+</head>
 <body>
     <div style="text-align: center;">
         <h2>Hi, welcome to my heroku erlang app -- {{param}}!<h2>
         <div>
-            <a href=“http://dhq.me/”>D.H.Q</a>
+            <a href="http://dhq.me/">D.H.Q的烂笔头</a>
         </div>
     </div>
 </body>
