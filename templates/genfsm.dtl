@@ -1,5 +1,10 @@
 <html>
 <body>
-    <h2 style='text-align: center;'>Hi, welcome to my heroku erlang app -- {{param}}!<h2>
+    <div style="text-align: center;">
+        <h2>Hi, welcome to my heroku erlang app -- {{param}}!<h2>
+        <div>
+            <a href=“http://dhq.me/”>D.H.Q</a>
+        </div>
+    </div>
 </body>
 </html>
