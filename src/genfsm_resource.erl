@@ -29,7 +29,7 @@ to_html(ReqData, State) ->
     ProcessesMemAlloc = erlang:memory(processes),
     MemTotal = erlang:memory(total),
 
-    OS = os:cmd("uname"),
+    OS = os:cmd("uname -a"),
 
     HtmlData = [
         {application_name, ApplicationName}, 
