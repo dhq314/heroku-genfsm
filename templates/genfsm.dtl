@@ -23,7 +23,7 @@ a:hover { text-decoration: none; }
             <p>Memory used by erlang processes：{{processes_used}}</p>
             <p>Memory allocated by erlang processes：{{processes}}</p>
             <p>The total amount of memory allocated：{{memtotal}}</p>
-            <p>OS：{{os}}</p>
+            <p>RequestTime：{{request_time}}</p>
             <p>Blog：<a href="http://dhq.me/">D.H.Q的烂笔头</a></p>
         </div>
     </div>
