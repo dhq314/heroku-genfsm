@@ -11,11 +11,15 @@ init([]) -> {ok, undefined}.
 
 to_html(ReqData, State) ->
     {ok, ApplicationName} = application:get_application(?MODULE),
-    Port = list_to_integer(os:getenv("PORT")),
-    %Port = case os:getenv("WEBMACHINE_PORT") of
-     %      false -> 8000;
-      %     AnyPort -> AnyPort
-       %   end,
+    Port = 
+        case os:getenv("PORT") of
+            false ->
+                case os:getenv("WEBMACHINE_PORT") of
+                    false -> 8000;
+                    AnyPort -> AnyPort
+                end;
+            AnyPort -> list_to_integer(AnyPort)
+        end,
 
     SchedulerId = erlang:system_info(scheduler_id),
     SchedulerNum = erlang:system_info(schedulers),

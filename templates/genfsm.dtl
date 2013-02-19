@@ -4,9 +4,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>{{application_name}}</title>
 <style type="text/css">
-p {
-    margin: 3px 0;
-}
+p { margin: 3px 0; }
+a, a:active { color: #00A9DA; }
+a:hover { text-decoration: none; }
 </style>
 </head>
 <body>
