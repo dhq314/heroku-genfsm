@@ -2,13 +2,28 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>genfsm</title>
+<title>{{application_name}}</title>
+<style type="text/css">
+p {
+    margin: 3px 0;
+}
+</style>
 </head>
 <body>
     <div style="text-align: center;">
-        <h2>Hi, welcome to my heroku erlang app -- {{param}}!<h2>
-        <div>
-            <a href="http://dhq.me/">D.H.Q的烂笔头</a>
+        <h1>Hi, welcome to my heroku erlang app!<h1>
+        <div style="width: 800px; margin: 0 auto; text-align: left;">
+            <h2 style="text-align: center;">Status</h2>
+            <p>AppName：{{application_name}}</p>
+            <p>Port：{{port}}</p>
+            <p>SchedulerId：{{scheduler_id}}</p>
+            <p>SchedulerNum：{{scheduler_num}}</p>
+            <p>ProcessCount：{{process_count}}</p>
+            <p>ProcessLimit：{{process_limit}}</p>
+            <p>Memory used by erlang processes：{{processes_used}}</p>
+            <p>Memory allocated by erlang processes：{{processes}}</p>
+            <p>The total amount of memory allocated：{{memtotal}}</p>
+            <p>Blog：<a href="http://dhq.me/">D.H.Q的烂笔头</a></p>
         </div>
     </div>
 </body>
