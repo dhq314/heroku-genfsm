@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>{{application_name}}</title>
 <style type="text/css">
-p { margin: 3px 0; }
+p { margin: 3px 0; font-size: 26px; }
 a, a:active { color: #00A9DA; }
 a:hover { text-decoration: none; }
 </style>
@@ -12,7 +12,7 @@ a:hover { text-decoration: none; }
 <body>
     <div style="text-align: center;">
         <h1>Hi, welcome to my heroku erlang app!<h1>
-        <div style="width: 800px; margin: 0 auto; text-align: left;">
+        <div style="width: 650px; margin: 0 auto; text-align: left;">
             <h2 style="text-align: center;">Status</h2>
             <p>AppName：{{application_name}}</p>
             <p>Port：{{port}}</p>
@@ -23,6 +23,7 @@ a:hover { text-decoration: none; }
             <p>Memory used by erlang processes：{{processes_used}}</p>
             <p>Memory allocated by erlang processes：{{processes}}</p>
             <p>The total amount of memory allocated：{{memtotal}}</p>
+            <p>OS：{{os}}</p>
             <p>Blog：<a href="http://dhq.me/">D.H.Q的烂笔头</a></p>
         </div>
     </div>
