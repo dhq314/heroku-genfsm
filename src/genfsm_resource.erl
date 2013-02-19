@@ -29,6 +29,8 @@ to_html(ReqData, State) ->
     ProcessesMemAlloc = erlang:memory(processes),
     MemTotal = erlang:memory(total),
 
+    OTP = erlang:system_info(otp_release),
+
     {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
     RequestTime = io_lib:format("~p-~p-~p ~p:~p:~p", [Year, Month, Day, Hour, Minute, Second]),
 
@@ -41,8 +43,9 @@ to_html(ReqData, State) ->
         {process_limit, ProcessLimit},
         {processes_used, ProcessesMemUsed},
         {processes, ProcessesMemAlloc},
-        {request_time, RequestTime},
-        {memtotal, MemTotal}
+        {memtotal, MemTotal},
+        {otp_release, OTP},
+        {request_time, RequestTime}
     ],
 
     {ok, Html} = genfsm_dtl:render(HtmlData),
