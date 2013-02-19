@@ -30,12 +30,7 @@ to_html(ReqData, State) ->
     MemTotal = erlang:memory(total),
 
     OTP = erlang:system_info(otp_release),
-    OS = 
-        case erlang:system_info(os_type) of
-            {OS1, OS2} ->
-                io_lib:format("~p ~p", [OS1, OS2]);
-            _ -> undefined 
-        end,
+    OS = io_lib:format("~p", [erlang:system_info(os_type)]),
 
     {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
     RequestTime = io_lib:format("~p-~p-~p ~p:~p:~p", [Year, Month, Day, Hour, Minute, Second]),
