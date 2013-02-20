@@ -6,10 +6,12 @@
 -export([init/1, to_html/2]).
 
 -include_lib("webmachine/include/webmachine.hrl").
+-include_lib("webmachine/include/wm_reqstate.hrl").
 
 init([]) -> {ok, undefined}.
 
 to_html(ReqData, State) ->
+    io:format("~p~n~n~n", [ReqData]),
     {ok, ApplicationName} = application:get_application(?MODULE),
     Port = 
         case os:getenv("PORT") of
@@ -35,9 +37,14 @@ to_html(ReqData, State) ->
     {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
     RequestTime = io_lib:format("~p-~p-~p ~p:~p:~p", [Year, Month, Day, Hour, Minute, Second]),
 
+    Socket = ReqData#wm_reqdata.wm_state#wm_reqstate.socket,
+    Ip = get_ip(Socket),
+
     HtmlData = [
-        {application_name, ApplicationName}, 
-        {port, Port},
+        %{application_name, ApplicationName}, 
+        {application_name, ReqData#wm_reqdata.peer}, 
+        %{port, Port},
+        {port, io_lib:format("~p", [Ip])},
         {scheduler_id, SchedulerId},
         {scheduler_num, SchedulerNum},
         {process_count, ProcessCount},
@@ -53,3 +60,9 @@ to_html(ReqData, State) ->
     {ok, Html} = genfsm_dtl:render(HtmlData),
     {Html, ReqData, State}.
 
+
+get_ip(Socket) ->
+    case inet:peername(Socket) of
+        {ok, {Ip, _Port}} -> Ip;
+        {error, _Reason} -> {0,0,0,0}
+    end.
