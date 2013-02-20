@@ -11,7 +11,7 @@
 init([]) -> {ok, undefined}.
 
 to_html(ReqData, State) ->
-    io:format("~p~n~n~n", [ReqData]),
+    %io:format("~p~n~n~n", [ReqData]),
     {ok, ApplicationName} = application:get_application(?MODULE),
     Port = 
         case os:getenv("PORT") of
@@ -41,10 +41,8 @@ to_html(ReqData, State) ->
     Ip = get_ip(Socket),
 
     HtmlData = [
-        %{application_name, ApplicationName}, 
-        {application_name, ReqData#wm_reqdata.peer}, 
-        %{port, Port},
-        {port, io_lib:format("~p", [Ip])},
+        {application_name, ApplicationName}, 
+        {port, Port},
         {scheduler_id, SchedulerId},
         {scheduler_num, SchedulerNum},
         {process_count, ProcessCount},
@@ -54,6 +52,8 @@ to_html(ReqData, State) ->
         {memtotal, MemTotal},
         {otp_release, OTP},
         {os, OS},
+        {client_ip, ReqData#wm_reqdata.peer}, 
+        {intranet_ip, io_lib:format("~p", [Ip])},
         {request_time, RequestTime}
     ],
 
