@@ -27,7 +27,6 @@ a:hover { text-decoration: none; }
             <p>OTP Version：{{otp_release}}</p>
             <p>OS：{{os}}</p>
             <p>ClientIp：{{client_ip}}</p>
-            <p>IntranetIp：{{intranet_ip}}</p>
             <p>RequestTime：{{request_time}}</p>
             <p>Blog：<a href="http://dhq.me/">D.H.Q的烂笔头</a></p>
         </div>

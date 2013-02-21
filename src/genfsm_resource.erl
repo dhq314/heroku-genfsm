@@ -37,16 +37,8 @@ to_html(ReqData, State) ->
     {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
     RequestTime = io_lib:format("~p-~p-~p ~p:~p:~p", [Year, Month, Day, Hour, Minute, Second]),
 
-    Socket = ReqData#wm_reqdata.wm_state#wm_reqstate.socket,
-    Ip = get_ip(Socket),
-
-    %io:format("p ~p~n", [application:get_env("port")]),
-
-    %io:format("o ~p~n", [os:getenv("port")]),
-
     HtmlData = [
         {application_name, ApplicationName}, 
-        %{application_name, application:get_env(port)}, 
         {port, Port},
         {scheduler_id, SchedulerId},
         {scheduler_num, SchedulerNum},
@@ -58,16 +50,9 @@ to_html(ReqData, State) ->
         {otp_release, OTP},
         {os, OS},
         {client_ip, ReqData#wm_reqdata.peer}, 
-        {intranet_ip, io_lib:format("~p", [Ip])},
         {request_time, RequestTime}
     ],
 
     {ok, Html} = genfsm_dtl:render(HtmlData),
     {Html, ReqData, State}.
 
-
-get_ip(Socket) ->
-    case inet:peername(Socket) of
-        {ok, {Ip, _Port}} -> Ip;
-        {error, _Reason} -> {0,0,0,0}
-    end.

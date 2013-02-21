@@ -14,5 +14,5 @@
                   webmachine
                  ]},
   {mod, { genfsm_app, []}},
-  {env, []}
+  {env, [{port, 8123}]}
  ]}.
