@@ -40,8 +40,13 @@ to_html(ReqData, State) ->
     Socket = ReqData#wm_reqdata.wm_state#wm_reqstate.socket,
     Ip = get_ip(Socket),
 
+    %io:format("p ~p~n", [application:get_env("port")]),
+
+    %io:format("o ~p~n", [os:getenv("port")]),
+
     HtmlData = [
         {application_name, ApplicationName}, 
+        %{application_name, application:get_env(port)}, 
         {port, Port},
         {scheduler_id, SchedulerId},
         {scheduler_num, SchedulerNum},
