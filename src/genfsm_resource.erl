@@ -12,7 +12,7 @@ init([]) -> {ok, undefined}.
 
 to_html(ReqData, State) ->
     %io:format("~p~n~n~n", [ReqData]),
-    {ok, ApplicationName} = application:get_application(),
+    {ok, ApplicationName} = application:get_application(?MODULE),
     Port = 
         case os:getenv("PORT") of
             false ->
