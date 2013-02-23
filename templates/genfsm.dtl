@@ -4,6 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="icon" href="./static/favicon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="./static/favicon.ico" type="image/x-icon" />
+<link rel="alternate" type="application/atom+xml" href="./static/feed.rss" title="{{application_name}}" />
 <title>{{application_name}}</title>
 <style type="text/css">
 body { margin: 0; padding: 0; }
