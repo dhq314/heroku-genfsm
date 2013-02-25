@@ -6,18 +6,20 @@
 <link rel="shortcut icon" href="./static/favicon.ico" type="image/x-icon" />
 <link rel="alternate" type="application/atom+xml" href="./static/feed.rss" title="{{application_name}}" />
 <title>{{application_name}}</title>
-<style type="text/css">
-body { margin: 0; padding: 0; }
-p { margin: 3px 0; font-size: 22px; }
-a, a:active { color: #00A9DA; }
-a:hover { text-decoration: none; }
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="./static/css/style.css" />
 </head>
 <body>
-    <div style="text-align: center;">
-        <h1>Hi, welcome to my heroku erlang app!<h1>
-        <div style="width: 650px; margin: 0 auto; text-align: left;">
-            <h2 style="text-align: center;">Status</h2>
+    <div class="main">
+        <div class="header">
+            <h1>{{application_name}}</h1>
+            <h2>Hi, welcome to my heroku erlang app!<h2>
+        </div>        
+        <div class="nav">
+            <ul>
+                <li>Status</li>
+            </ul>
+        </div>
+        <div class="content">
             <p>AppName：{{application_name}}</p>
             <p>Port：{{port}}</p>
             <p>SchedulerId：{{scheduler_id}}</p>
