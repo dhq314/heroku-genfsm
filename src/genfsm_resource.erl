@@ -6,7 +6,6 @@
 -export([init/1, to_html/2]).
 
 -include_lib("webmachine/include/webmachine.hrl").
--include_lib("webmachine/include/wm_reqstate.hrl").
 
 init([]) -> {ok, undefined}.
 

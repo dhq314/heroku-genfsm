@@ -5,9 +5,10 @@ body {
 	font: 14px/24px "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
-a, a:active { color: #00A9DA; }
-
-a:hover { text-decoration: none; }
+a:hover { 
+    color: #00A9DA; 
+    text-decoration: none; 
+}
 
 .main {
     box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
@@ -48,6 +49,17 @@ a:hover { text-decoration: none; }
     padding: 0;
     line-height: 17px;
 }
+.nav ul li a {
+    padding: 0.9em 1.4em;
+    color: #AAA;
+    text-decoration: none; 
+}
+.nav ul li a:hover {
+    color: #00A9DA; 
+}
+.nav ul li #current {
+    color: #000; 
+}
 
 .content {
     margin: 0 120px 45px;
@@ -56,5 +68,40 @@ a:hover { text-decoration: none; }
     margin: 1px 0; 
     padding: 0;
     font-size: 17px
+}
+.content a, .content a:active { 
+    color: #00A9DA; 
+}
+
+.tool {
+    margin: 100px auto 200px;
+    width: 400px;
+}
+.tool .inp {
+	margin: 0;
+	padding: 0;
+	width: 200px;
+	height: 30px;
+	line-height: 30px;
+	border: 1px solid #C7CCD1;
+	border-right-width: 0px;
+	float: left;
+	text-align: center;
+}
+.tool .btn {
+	margin: 0;
+	height: 32px;
+	border: 1px solid #C7CCD1;
+	font-size: 14px;
+	float: left;
+	cursor: pointer;
+	width: 100px;
+    background: #F0F0F0;
+    color: #AAA;
+}
+.tool .sta {
+	margin: 40px auto;
+	text-align: left;
+	clear: both;
 }
 

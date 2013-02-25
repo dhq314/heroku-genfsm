@@ -16,7 +16,8 @@
         </div>        
         <div class="nav">
             <ul>
-                <li>Status</li>
+                <li><a id="current" href="#">Status</a></li>
+                <li><a href="./tool/">Tool</a></li>
             </ul>
         </div>
         <div class="content">
