@@ -50,7 +50,6 @@ init([]) ->
 		end,
     {ok, App} = application:get_application(?MODULE),
     {ok, Dispatch} = file:consult(filename:join([priv_dir(App), "dispatch.conf"])),
-
 	Port = 
         case os:getenv("PORT") of
             false ->
@@ -60,13 +59,11 @@ init([]) ->
                 end;
             AnyPort -> list_to_integer(AnyPort)
         end,
-	
     WebConfig = [
                  {ip, Ip},
                  {port, Port},
                  %{log_dir, "priv/log"},
                  {dispatch, Dispatch}],
-	
 	Egeoip = {egeoip, {egeoip, start_link, [egeoip]},
                 permanent, 5000, worker, [egeoip]},
 	

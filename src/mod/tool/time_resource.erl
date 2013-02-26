@@ -34,4 +34,3 @@ resource_exists(ReqData, _Context) ->
 to_json(ReqData, Result) ->
     {mochijson:encode(Result), ReqData, Result}.
 
-

@@ -20,6 +20,7 @@ to_html(ReqData, State) ->
     HtmlData = [
         {application_name, ApplicationName}, 
         {now, Now},
+		{client_ip, ReqData#wm_reqdata.peer},
         {domain, Domain}
     ],
 

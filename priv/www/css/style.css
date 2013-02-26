@@ -74,7 +74,7 @@ a:hover {
 }
 
 .tool {
-    margin: 100px auto 200px;
+    margin: 80px auto 120px;
     width: 400px;
 }
 .tool .inp {
@@ -104,4 +104,7 @@ a:hover {
 	text-align: left;
 	clear: both;
 }
-
+.tool .sta p {
+    margin: 0 1.5em;
+    padding: 0;
+}
