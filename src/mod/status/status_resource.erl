@@ -2,7 +2,7 @@
 %% @copyright YYYY author.
 %% @doc Example webmachine_resource.
 
--module(genfsm_resource).
+-module(status_resource).
 -export([init/1, to_html/2]).
 
 -include_lib("webmachine/include/webmachine.hrl").
@@ -52,6 +52,6 @@ to_html(ReqData, State) ->
         {request_time, RequestTime}
     ],
 
-    {ok, Html} = genfsm_dtl:render(HtmlData),
+    {ok, Html} = genfsm_status_dtl:render(HtmlData),
     {Html, ReqData, State}.
 

@@ -23,7 +23,7 @@ to_html(ReqData, State) ->
         {domain, Domain}
     ],
 
-    {ok, Html} = tool_dtl:render(HtmlData),
+    {ok, Html} = genfsm_tool_dtl:render(HtmlData),
     {Html, ReqData, State}.
 
 
