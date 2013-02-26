@@ -1,19 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="icon" href="http://{{domain}}/static/favicon.ico" type="image/x-icon" />
-<link rel="shortcut icon" href="http://{{domain}}/static/favicon.ico" type="image/x-icon" />
-<link rel="alternate" type="application/atom+xml" href="http://{{domain}}/static/feed.rss" title="{{application_name}}" />
-<title>{{application_name}}</title>
-<link rel="stylesheet" type="text/css" media="all" href="http://{{domain}}/static/css/style.css" />
-</head>
-<body>
-    <div class="main">
-        <div class="header">
-            <h1>{{application_name}}</h1>
-            <h2>Hi, welcome to my heroku erlang app!<h2>
-        </div>        
+{% include "genfsm_head.dtl" %}
+
         <div class="nav">
             <ul>
                 <li><a href="http://{{domain}}/">Status</a></li>
@@ -30,12 +16,6 @@
             <div class="sta" id="ip_sta">&nbsp;</div>
 
         </div>
-    </div>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
-<script type="text/javascript">
-    var Domain = "{{domain}}";
-</script>
-<script type="text/javascript" src="http://{{domain}}/static/js/tool.js"></script>
-</body>
-</html>
+
+{% include "genfsm_foot.dtl" %}
 

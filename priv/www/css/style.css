@@ -6,13 +6,13 @@ body {
 }
 
 a:hover { 
-    color: #00A9DA; 
+    color: #00A9DA !important; 
     text-decoration: none; 
 }
 
 .main {
     box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
-    margin: 1.2rem auto;
+    margin: 1rem auto;
     overflow: hidden;
     padding: 0 2.85714rem;
     width: 960px;
@@ -54,9 +54,6 @@ a:hover {
     color: #AAA;
     text-decoration: none; 
 }
-.nav ul li a:hover {
-    color: #00A9DA; 
-}
 .nav ul li #current {
     color: #000; 
 }
@@ -68,9 +65,6 @@ a:hover {
     margin: 1px 0; 
     padding: 0;
     font-size: 17px
-}
-.content a, .content a:active { 
-    color: #00A9DA; 
 }
 
 .tool {
@@ -108,3 +102,13 @@ a:hover {
     margin: 0 1.5em;
     padding: 0;
 }
+
+.footer {
+    margin: 15px auto;
+    text-align: center;
+    font-size: 11px;
+}
+.footer a, .footer a:active { 
+    color: #AAA; 
+}
+

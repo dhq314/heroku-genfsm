@@ -11,6 +11,11 @@ init([]) -> {ok, undefined}.
 
 to_html(ReqData, State) ->
     %io:format("~p~n~n~n", [ReqData]),
+    Domain = 
+        case mochiweb_headers:get_value("Host", ReqData#wm_reqdata.req_headers) of
+            undefined -> "genfsm.herokuapp.com";
+            R -> R
+        end,
     {ok, ApplicationName} = application:get_application(?MODULE),
     Port = 
         case os:getenv("PORT") of
@@ -37,6 +42,7 @@ to_html(ReqData, State) ->
     RequestTime = io_lib:format("~p-~p-~p ~p:~p:~p", [Year, Month, Day, Hour, Minute, Second]),
 
     HtmlData = [
+        {domain, Domain},
         {application_name, ApplicationName}, 
         {port, Port},
         {scheduler_id, SchedulerId},
