@@ -14,6 +14,8 @@
 %% supervisor callbacks
 -export([init/1]).
 
+
+
 %% @spec start_link() -> ServerRet
 %% @doc API for starting the supervisor.
 start_link() ->
@@ -41,25 +43,39 @@ upgrade() ->
 %% @spec init([]) -> SupervisorTree
 %% @doc supervisor callback.
 init([]) ->
-    %Ip = case os:getenv("WEBMACHINE_IP") of false -> "0.0.0.0"; Any -> Any end,
+    Ip = 
+		case os:getenv("WEBMACHINE_IP") of 
+			false -> "0.0.0.0"; 
+			Any -> Any 
+		end,
     {ok, App} = application:get_application(?MODULE),
-    {ok, Dispatch} = file:consult(filename:join([priv_dir(App),
-                                                 "dispatch.conf"])),
-    %Port = case os:getenv("WEBMACHINE_PORT") of
-     %      false -> 8000;
-      %     AnyPort -> AnyPort
-       %   end,
-    Port = list_to_integer(os:getenv("PORT")),
+    {ok, Dispatch} = file:consult(filename:join([priv_dir(App), "dispatch.conf"])),
+
+	Port = 
+        case os:getenv("PORT") of
+            false ->
+                case os:getenv("WEBMACHINE_PORT") of
+                    false -> 8000;
+                    AnyPort -> AnyPort
+                end;
+            AnyPort -> list_to_integer(AnyPort)
+        end,
+	
     WebConfig = [
-                 {ip, "0.0.0.0"},
-                 %{ip, Ip},
+                 {ip, Ip},
                  {port, Port},
                  %{log_dir, "priv/log"},
                  {dispatch, Dispatch}],
+	
+	Egeoip = {egeoip, {egeoip, start_link, [egeoip]},
+                permanent, 5000, worker, [egeoip]},
+	
     Web = {webmachine_mochiweb,
            {webmachine_mochiweb, start, [WebConfig]},
            permanent, 5000, worker, [mochiweb_socket_server]},
-    Processes = [Web],
+	
+    Processes = [Egeoip, Web],
+
     {ok, { {one_for_one, 10, 10}, Processes} }.
 
 %%
