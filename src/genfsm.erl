@@ -35,12 +35,14 @@ start() ->
     application:set_env(webmachine, webmachine_logger_module, 
                         webmachine_logger),
     ensure_started(webmachine),
+	ensure_started(mnesia),
     application:start(genfsm).
 
 %% @spec stop() -> ok
 %% @doc Stop the genfsm server.
 stop() ->
     Res = application:stop(genfsm),
+	application:stop(mnesia),
     application:stop(webmachine),
     application:stop(mochiweb),
     application:stop(crypto),
