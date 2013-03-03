@@ -12,6 +12,6 @@
     <div class="main">
         <div class="header">
             <h1>{{application_name}}</h1>
-            <h2>Hi, welcome to my heroku erlang app!<h2>
+            <h2>Just code for fun!<h2>
         </div>     
 
