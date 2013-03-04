@@ -4,6 +4,7 @@
             <ul>
                 <li><a href="http://{{domain}}/">Status</a></li>
                 <li><a id="current" href="#">Tool</a></li>
+                <li><a href="http://{{domain}}/erlshell/">ErlShell</a></li>
             </ul>
         </div>
         <div class="tool">

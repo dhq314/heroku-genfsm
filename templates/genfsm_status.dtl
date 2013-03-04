@@ -3,7 +3,8 @@
         <div class="nav">
             <ul>
                 <li><a id="current" href="#">Status</a></li>
-                <li><a href="./tool/">Tool</a></li>
+                <li><a href="http://{{domain}}/tool/">Tool</a></li>
+                <li><a href="http://{{domain}}/erlshell/">ErlShell</a></li>
             </ul>
         </div>
         <div class="content">

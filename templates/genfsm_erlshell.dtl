@@ -1,0 +1,18 @@
+{% include "genfsm_head.dtl" %}
+
+        <div class="nav">
+            <ul>
+                <li><a href="http://{{domain}}/">Status</a></li>
+                <li><a href="http://{{domain}}/tool/">Tool</a></li>
+                <li><a id="current" href="#">ErlShell</a></li>
+            </ul>
+        </div>
+        <div class="erlshell">
+            <div id="es_div"></div>
+            <button id="erlshell_action">Start</button>
+        </div>
+
+<script type="text/javascript" src="http://{{domain}}/static/js/erlshell.js"></script>
+
+{% include "genfsm_foot.dtl" %}
+
