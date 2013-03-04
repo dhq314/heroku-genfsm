@@ -16,7 +16,7 @@ content_types_provided(ReqData, Context) ->
 resource_exists(ReqData, _Context) ->
     Result = 
         case ibrowse:send_req("http://life.tenpay.com/cgi-bin/mobile/MobileQueryAttribution.cgi?chgmobile=13570374550", [], get) of
-            {ok, _, _, Xml} ->
+            {ok, _, _, _Xml} ->
                 [{error, 1}];
             _ ->
                 [{error, 1}]
