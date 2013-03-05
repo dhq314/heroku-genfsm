@@ -30,7 +30,6 @@ ErlShell.bind_es_keypress = function() {
         {
             var erl_str = "", data = {};
             erl_str = $.trim($("#es_str_zone").text());
-            //alert(erl_str);
             if ( erl_str )
             {
                 data = { "action" : 3, "pid" : ErlShell.pid, "erl_str" : erl_str };
@@ -47,7 +46,6 @@ ErlShell.bind_es_keypress = function() {
                             ErlShell.line_num = rs.line_num;
                             ErlShell.create_es_line(ErlShell.line_num);
                             ErlShell.bind_es_keypress();
-                            //alert(rs.value);
                         }
                         else if ( rs.result == 31 )         //进程异常关闭
                         {
@@ -59,7 +57,6 @@ ErlShell.bind_es_keypress = function() {
             } 
             return false;
         }
-        //alert(keycode);
     });
 };
 
@@ -79,7 +76,7 @@ ErlShell.erlshell_heart = function() {
         ErlShell.timer = undefined;
         return false;
     }
-    var data = { "action" : 4, "pid" : ErlShell.pid};
+    var data = { "action" : 4, "pid" : ErlShell.pid };
     $.post(ErlShell.url, data, function(rs) {
         if ( rs.result == 41 )                      //进程异常关闭
         {
@@ -108,15 +105,7 @@ $("#erlshell_action").click(function() {
         return false;
     }
     ErlShell.process = 1;
-    var data = {};
-    if ( ErlShell.action == 1 )
-    {
-        data = { "action" : 1 };
-    }
-    else
-    {
-        data = { "action" : 2, "pid" : ErlShell.pid }
-    }
+    var data = ErlShell.action == 1 ? { "action" : 1 } : { "action" : 2, "pid" : ErlShell.pid };
     $.post(ErlShell.url, data, function(rs) {
         if ( rs.result == 1 )
         {

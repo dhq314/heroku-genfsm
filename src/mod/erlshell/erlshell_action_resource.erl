@@ -106,4 +106,3 @@ get_process_name(PostQueryList) ->
 create_process_name(Prefix, List) ->
     util:to_atom(lists:concat(lists:flatten([Prefix] ++ lists:map(fun(T) -> ['_', T] end, List)))).
 	
-

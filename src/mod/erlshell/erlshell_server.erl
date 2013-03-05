@@ -50,13 +50,17 @@ init([HeartTimeInterval]) ->
 handle_call({'EVAL_ErlStr', ErlStr}, _From, State) ->
     LineNum = State#state.line_num + 1,
     {NewValue, RetBindings} = 
-        try eval(ErlStr, State#state.bindings) of
-            {value, Value, NewBindings} ->
-                %io:format("kkkkkkkkkkkkk ~p~n", [Value]),
-                {Value, NewBindings}
-        catch
-            _:Error ->
-                {Error, State#state.bindings}
+        case check_valid(ErlStr) of
+            true ->
+                try eval(ErlStr, State#state.bindings) of
+                    {value, Value, NewBindings} ->
+                        {Value, NewBindings}
+                catch
+                    _:Error ->
+                        {Error, State#state.bindings}
+                end;
+            false ->
+                {"illegal expression", State#state.bindings}
         end,
     RetState = State#state{
         bindings = RetBindings,
@@ -73,7 +77,6 @@ handle_call(_Request, _From, State) ->
 
 handle_cast('ERLSHELL_HEART', State) ->
     HeartTime = util:unixtime(),
-    %io:format("ERLSHELL_HEART ~p~n" , [HeartTime]),
     NewState = State#state{
         heart_time = HeartTime
     },
@@ -84,7 +87,6 @@ handle_cast(_Msg, State) ->
 %% @doc 心跳包检测
 handle_info('DETECT_HEART', State) ->
     Now = util:unixtime(),
-    %io:format("ErlShell Stop by Heart ~p~n", [Now]),
     case Now - State#state.heart_time > State#state.heart_time_interval * 2 of
         true ->
             {stop, normal, State};
@@ -119,4 +121,18 @@ eval(ErlStr, Bindings) ->
         end,
     {ok, Expr} = erl_parse:parse_exprs(NewTokens),
     erl_eval:exprs(Expr, Bindings).
-    
+
+%% @doc 检查表达式是否含有非法语句
+check_valid(ErlStr) ->
+    REList = ["application:stop", "os:cmd(.*)rm"],
+    check_valid(REList, ErlStr, true).
+check_valid([], _ErlStr, Bool) ->
+    Bool;
+check_valid([RE | R], ErlStr, Bool) ->
+    case re:run(ErlStr, RE) of
+        {match, _Captured} ->
+            false;
+        _ ->
+            check_valid(R, ErlStr, Bool)
+    end.
+
