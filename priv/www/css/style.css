@@ -120,7 +120,7 @@ a:hover {
 }
 #es_div {
     border: 1px solid #EDEDED; 
-    height: 300px;
+    height: 360px;
     overflow-y: auto;
     background-color: #EDEDED;
 }

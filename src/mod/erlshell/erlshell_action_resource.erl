@@ -20,8 +20,9 @@ content_types_provided(ReqData, Context) ->
     {[{"application/json", to_json}], ReqData, Context}.
 
 to_json(ReqData, Context) ->
-    {json_body(wrq:req_qs(ReqData)), ReqData, Context}.
+    {encode_json(wrq:req_qs(ReqData)), ReqData, Context}.
 
+%% @doc 处理客户端的 POST 请求
 process_post(ReqData, Context) ->
     PostQueryList = mochiweb_util:parse_qs(wrq:req_body(ReqData)),
     Body = 
@@ -42,9 +43,7 @@ process_post(ReqData, Context) ->
                         [{result, 2}]
                 end
         end,
-    {true, wrq:append_to_response_body(json_body(Body), ReqData), Context}.
-
-json_body(QS) -> mochijson:encode({struct, QS}).
+    {true, wrq:append_to_response_body(encode_json(Body), ReqData), Context}.
 
 %% @doc 创建ErlShell
 erlshell_create(ActionCode) ->
@@ -56,7 +55,6 @@ erlshell_create(ActionCode) ->
         _ ->
             [{result, 2}, {action, ActionCode}]
     end.
-
 
 %% @doc 关闭ErlShell
 erlshell_stop(PostQueryList, ActionCode) ->
@@ -105,4 +103,8 @@ get_process_name(PostQueryList) ->
 %% @doc 创建进程名
 create_process_name(Prefix, List) ->
     util:to_atom(lists:concat(lists:flatten([Prefix] ++ lists:map(fun(T) -> ['_', T] end, List)))).
-	
+
+%% @doc 编成 json 格式
+encode_json(QueryString) -> 
+    mochijson:encode({struct, QueryString}).
+

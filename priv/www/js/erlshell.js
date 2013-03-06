@@ -98,6 +98,7 @@ ErlShell.erlshell_stop = function() {
     $("#erlshell_action").html("Start");
     $("#es_div").css({"background-color" : "#EDEDED"});
     ErlShell.reset_es_keypress();
+    $(window).unbind('beforeunload');
 }
 
 $("#erlshell_action").click(function() {
@@ -125,6 +126,9 @@ $("#erlshell_action").click(function() {
                     ErlShell.erlshell_heart();
                     $("#es_div").css({"background-color" : "#FFF"});
                     ErlShell.timer = setInterval(ErlShell.erlshell_heart, ErlShell.interval * 1000);
+                    $(window).bind('beforeunload', function() {
+                        return "确定要退出 ErlShell ？";
+                    });
                     break;
                 //关闭ErlShell
                 case 2:
