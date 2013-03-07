@@ -22,7 +22,7 @@ content_types_provided(ReqData, Context) ->
 to_json(ReqData, Context) ->
     {encode_json(wrq:req_qs(ReqData)), ReqData, Context}.
 
-%% @doc 处理客户端的 POST 请求
+%% @doc 处理客户端以 POST 方式传送过来的请求
 process_post(ReqData, Context) ->
     PostQueryList = mochiweb_util:parse_qs(wrq:req_body(ReqData)),
     Body = 
@@ -31,12 +31,16 @@ process_post(ReqData, Context) ->
                 [{result, 2}];
             ActionCode ->
                 case util:string_to_term(ActionCode) of
-                    1 ->
+                    %% 创建ErlShell
+                    1 ->    
                         erlshell_create(ActionCode);
+                    %% 关闭ErlShell
                     2 ->
                         erlshell_stop(PostQueryList, ActionCode);
+                    %% 解析 erlang 表达式字符串
                     3 ->
                         erlshell_eval(PostQueryList, ActionCode);
+                    %% ErlShell 的心跳包请求
                     4 ->
                         erlshell_heart(PostQueryList, ActionCode);
                     _ ->
@@ -66,7 +70,7 @@ erlshell_stop(PostQueryList, ActionCode) ->
     end,
     [{result, 1}, {action, ActionCode}].
 
-%% @doc 解析erlstr
+%% @doc 解析 erlang 表达式字符串
 erlshell_eval(PostQueryList, ActionCode) ->
     case get_process_name(PostQueryList) of
         undefined ->
@@ -74,8 +78,8 @@ erlshell_eval(PostQueryList, ActionCode) ->
             [{result, 31}, {action, ActionCode}];
         Pid ->
             ErlStr = proplists:get_value("erl_str", PostQueryList),
-            Ret = gen_server:call(Pid, {'EVAL_ErlStr', ErlStr}),
-            [{action, ActionCode}] ++ Ret
+            Ret = gen_server:call(Pid, {'EVAL_ERLSTR', ErlStr}),
+            [{action, ActionCode} | Ret]
     end.
 
 %% @doc ErlShell 的心跳包

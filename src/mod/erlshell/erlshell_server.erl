@@ -35,7 +35,6 @@ start_link([ProcessName, HeartTimeInterval]) ->
 %% ------------------------------------------------------------------
 
 init([HeartTimeInterval]) ->
-    %io:format("Init Args ~p~n", [HeartTimeInterval]),
     HeartTime = util:unixtime(),
     HeartTimer = erlang:send_after(HeartTimeInterval * 1000, self(), 'DETECT_HEART'),
     Bindings = erl_eval:new_bindings(),
@@ -47,7 +46,7 @@ init([HeartTimeInterval]) ->
     },
     {ok, State}.
 
-handle_call({'EVAL_ErlStr', ErlStr}, _From, State) ->
+handle_call({'EVAL_ERLSTR', ErlStr}, _From, State) ->
     LineNum = State#state.line_num + 1,
     {NewValue, RetBindings} = 
         case check_valid(ErlStr) of
@@ -124,7 +123,7 @@ eval(ErlStr, Bindings) ->
 
 %% @doc 检查表达式是否含有非法语句
 check_valid(ErlStr) ->
-    REList = ["application:stop", "os:cmd(.*)rm"],
+    REList = ["application(.*)stop", "os(.*)cmd(.*)rm"],
     check_valid(REList, ErlStr, true).
 check_valid([], _ErlStr, Bool) ->
     Bool;
