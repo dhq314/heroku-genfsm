@@ -28,7 +28,7 @@ ErlShell.create_es_command_line = function(line_num) {
 
 //绑定命令行事件
 ErlShell.bind_es_command_line_keypress = function() {
-    $("#es_command_line").bind("keypress", function(event) {
+    $("#es_command_line").bind("keydown", function(event) {
         var keycode = event.keyCode ? event.keyCode : event.which;
         switch ( keycode )
         {
