@@ -5,11 +5,13 @@ var ErlShell = {
     "interval" : 10,                                    //心跳包定时间隔
     "line_num" : 1,                                     //ErlShell的行数
     "process" : 0,                                      //0标识当前没请求要处理，1反之
-    "url" : "http://" + Domain + "/erlshellaction/"     //POST请求的地址
+    "url" : "http://" + Domain + "/erlshellaction/",    //POST请求的地址
+    "command_history" : [],                            	//使用过的历史命令
+	"command_cursor" : 0								//命令光标位置
 };
 
 //创建命令行
-ErlShell.create_es_line = function(line_num) {
+ErlShell.create_es_command_line = function(line_num) {
     var _html = "";
     _html += '<table class="es_line">';
     _html += '    <tr>';
@@ -28,42 +30,78 @@ ErlShell.create_es_line = function(line_num) {
 ErlShell.bind_es_command_line_keypress = function() {
     $("#es_command_line").bind("keypress", function(event) {
         var keycode = event.keyCode ? event.keyCode : event.which;
-        if ( keycode == 13 )        //回车事件 
+        switch ( keycode )
         {
-            var erl_str = "", data = {};
-            // 获取命令行里的 erlang 表达式字符串
-            erl_str = $.trim($("#es_command_line").text());
-            if ( erl_str )
-            {
-                data = { "action" : 3, "pid" : ErlShell.pid, "erl_str" : erl_str };
-                $("#es_div").css({"background-color" : "#EDEDED"});
-                $.post(ErlShell.url, data, function(rs) {
-                    if ( parseInt(rs.action) == 3 )
+            //回车键
+            case 13:
+                var erl_str = "", data = {};
+                // 获取命令行里的 erlang 表达式字符串
+                erl_str = $.trim($("#es_command_line").text());
+                if ( erl_str )
+                {
+                    data = { "action" : 3, "pid" : ErlShell.pid, "erl_str" : erl_str };
+                    $("#es_div").css({"background-color" : "#EDEDED"});
+                    $.post(ErlShell.url, data, function(rs) {
+                        if ( parseInt(rs.action) == 3 )
+                        {
+                            $("#es_div").css({"background-color" : "#FFF"});
+                            $("#es_result").html(rs.value);
+                            if ( rs.result == 1 )
+                            {
+                                ErlShell.reset_es_keypress();
+                                ErlShell.line_num = rs.line_num;
+                                ErlShell.create_es_command_line(ErlShell.line_num);
+                                ErlShell.bind_es_command_line_keypress();
+                            }
+                            else if ( rs.result == 31 )         //进程异常关闭
+                            {
+                                ErlShell.erlshell_stop();
+                                alert("进程异常已关闭，请重新启动 ErlShell！"); 
+                            }
+                        }
+                        //alert(erl_str);
+                        ErlShell.command_history.unshift(erl_str);
+                        ErlShell.command_cursor = 0;
+                    }, "json");
+                } 
+                else            //空行按回车键光标跳到下一行
+                {
+                    ErlShell.reset_es_keypress();
+                    ErlShell.create_es_command_line(ErlShell.line_num);
+                    ErlShell.bind_es_command_line_keypress();
+                }
+                return false;
+                break;
+            //上方向键
+            case 38:
+                if ( ErlShell.command_history.length > 0 )
+                {
+                    if ( ErlShell.command_cursor >= ErlShell.command_history.length )
                     {
-                        $("#es_div").css({"background-color" : "#FFF"});
-                        $("#es_result").html(rs.value);
-                        if ( rs.result == 1 )
-                        {
-                            ErlShell.reset_es_keypress();
-                            ErlShell.line_num = rs.line_num;
-                            ErlShell.create_es_line(ErlShell.line_num);
-                            ErlShell.bind_es_command_line_keypress();
-                        }
-                        else if ( rs.result == 31 )         //进程异常关闭
-                        {
-                            ErlShell.erlshell_stop();
-                            alert("进程异常已关闭，请重新启动 ErlShell！"); 
-                        }
+                        ErlShell.command_cursor = ErlShell.command_history.length - 1; 
                     }
-                }, "json");
-            } 
-            else
-            {
-                ErlShell.reset_es_keypress();
-                ErlShell.create_es_line(ErlShell.line_num);
-                ErlShell.bind_es_command_line_keypress();
-            }
-            return false;
+                    $("#es_command_line").html(ErlShell.command_history[ErlShell.command_cursor]);
+                    ErlShell.command_cursor++;
+                }
+                break;
+            //下方向键
+            case 40:
+                if ( ErlShell.command_history.length > 0 )
+                {
+                    if ( ErlShell.command_cursor <= 0 )
+                    {
+                        ErlShell.command_cursor = 0; 
+                        $("#es_command_line").html("");
+                    }
+                    else
+                    {
+                        ErlShell.command_cursor--;
+                        $("#es_command_line").html(ErlShell.command_history[ErlShell.command_cursor]);
+                    }
+                }
+                break;
+            default:
+                break;
         }
     });
 };
@@ -98,14 +136,17 @@ ErlShell.erlshell_heart = function() {
 
 //启动ErlShell
 ErlShell.erlshell_init = function(rs) {
+    //初始状态数据
     ErlShell.pid = rs.pid;
     ErlShell.interval = rs.interval;
     ErlShell.line_num = rs.line_num;
     ErlShell.status = 2;
     ErlShell.process = 0,
+    ErlShell.command_history = [];
+    ErlShell.command_cursor = 0;
     $("#es_div").html("");
     //创建命令行
-    ErlShell.create_es_line(ErlShell.line_num);
+    ErlShell.create_es_command_line(ErlShell.line_num);
     //绑定命令行事件
     ErlShell.bind_es_command_line_keypress();
     $("#es_div").css({"background-color" : "#FFF"});
@@ -138,24 +179,22 @@ $("#erlshell_action").click(function() {
         return false;
     }
     ErlShell.process = 1;
-    var data = ErlShell.status == 1 ? { "action" : 1 } : { "action" : 2, "pid" : ErlShell.pid };
+    var data = {};
+    if ( ErlShell.status == 1 )
+    {
+        data = { "action" : 1 };
+    }
+    else
+    {
+        data = { "action" : 2, "pid" : ErlShell.pid };
+        //关闭ErlShell
+        ErlShell.erlshell_stop();
+    }
     $.post(ErlShell.url, data, function(rs) {
-        if ( rs.result == 1 )
+        if ( rs.result == 1 && parseInt(rs.action, 10) == 1 )
         {
-            switch ( parseInt(rs.action, 10) )
-            {
-                //启动ErlShell
-                case 1:
-                    ErlShell.erlshell_init(rs);
-                    break;
-                //关闭ErlShell
-                case 2:
-                    ErlShell.erlshell_stop();
-                    break;
-                default:
-                    alert("ActionCode " + rs.action);
-                    break;
-            }
+            //启动ErlShell
+            ErlShell.erlshell_init(rs);
         }
         ErlShell.process = 0
     }, "json");
