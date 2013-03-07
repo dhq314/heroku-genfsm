@@ -18,7 +18,7 @@ ErlShell.create_es_line = function(line_num) {
     _html += '            <div id="es_command_line" contenteditable="true"></div>';
     _html += '        </td>';
     _html += '    </tr>';
-    _html += '    <tr><td colspan="2" id="es_result_' + line_num + '"></td></tr>';
+    _html += '    <tr><td colspan="2" id="es_result"></td></tr>';
     _html += '</table>';
     $("#es_div").append(_html);
     $("#es_command_line").focus();
@@ -41,8 +41,7 @@ ErlShell.bind_es_command_line_keypress = function() {
                     if ( parseInt(rs.action) == 3 )
                     {
                         $("#es_div").css({"background-color" : "#FFF"});
-                        var es_result = "#es_result_" + ErlShell.line_num;
-                        $(es_result).html(rs.value);
+                        $("#es_result").html(rs.value);
                         if ( rs.result == 1 )
                         {
                             ErlShell.reset_es_keypress();
@@ -58,6 +57,12 @@ ErlShell.bind_es_command_line_keypress = function() {
                     }
                 }, "json");
             } 
+            else
+            {
+                ErlShell.reset_es_keypress();
+                ErlShell.create_es_line(ErlShell.line_num);
+                ErlShell.bind_es_command_line_keypress();
+            }
             return false;
         }
     });
@@ -66,6 +71,7 @@ ErlShell.bind_es_command_line_keypress = function() {
 ErlShell.reset_es_keypress = function() {
     $('#es_command_line').unbind('keypress');
     $('#es_command_line').attr({"id" : "", "contenteditable" : "false"});
+    $('#es_result').attr({"id" : ""});
 };
 
 // ErlShell 的心跳包函数

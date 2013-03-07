@@ -8,7 +8,7 @@
 ]).
 -include_lib("webmachine/include/webmachine.hrl").
 
--define(HEART_TIME_INTERVAL, 20).
+-define(HEART_TIME_INTERVAL, 30).
 
 
 init(_) -> {ok, undefined}.
