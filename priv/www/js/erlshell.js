@@ -48,7 +48,7 @@ ErlShell.bind_es_command_line_keypress = function() {
                             $("#es_result").html(rs.value);
                             if ( rs.result == 1 )
                             {
-                                ErlShell.reset_es_keypress();
+                                ErlShell.reset_es_command_line_keypress();
                                 ErlShell.line_num = rs.line_num;
                                 ErlShell.create_es_command_line(ErlShell.line_num);
                                 ErlShell.bind_es_command_line_keypress();
@@ -66,7 +66,7 @@ ErlShell.bind_es_command_line_keypress = function() {
                 } 
                 else            //空行按回车键光标跳到下一行
                 {
-                    ErlShell.reset_es_keypress();
+                    ErlShell.reset_es_command_line_keypress();
                     ErlShell.create_es_command_line(ErlShell.line_num);
                     ErlShell.bind_es_command_line_keypress();
                 }
@@ -106,8 +106,8 @@ ErlShell.bind_es_command_line_keypress = function() {
     });
 };
 
-ErlShell.reset_es_keypress = function() {
-    $('#es_command_line').unbind('keypress');
+ErlShell.reset_es_command_line_keypress = function() {
+    $('#es_command_line').unbind('keydown');
     $('#es_command_line').attr({"id" : "", "contenteditable" : "false"});
     $('#es_result').attr({"id" : ""});
 };
@@ -170,7 +170,7 @@ ErlShell.erlshell_stop = function() {
     ErlShell.status = 1;
     $("#erlshell_action").html("Start");
     $("#es_div").css({"background-color" : "#EDEDED"});
-    ErlShell.reset_es_keypress();
+    ErlShell.reset_es_command_line_keypress();
     $(window).unbind('beforeunload');
 }
 
