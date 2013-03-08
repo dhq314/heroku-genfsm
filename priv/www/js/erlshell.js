@@ -12,17 +12,17 @@ var ErlShell = {
 
 //创建命令行
 ErlShell.create_es_command_line = function(line_num) {
-    var _html = "";
-    _html += '<table class="es_line">';
-    _html += '    <tr>';
-    _html += '        <td class="es_num">' + line_num + '></td>';
-    _html += '        <td class="es_str">';
-    _html += '            <div id="es_command_line" contenteditable="true"></div>';
-    _html += '        </td>';
-    _html += '    </tr>';
-    _html += '    <tr><td colspan="2" id="es_result"></td></tr>';
-    _html += '</table>';
-    $("#es_div").append(_html);
+    var _html = [];
+    _html.push('<table class="es_line">');
+    _html.push('    <tr>');
+    _html.push('        <td class="es_num">' + line_num + '></td>');
+    _html.push('        <td class="es_str">');
+    _html.push('            <div id="es_command_line" contenteditable="true"></div>');
+    _html.push('        </td>');
+    _html.push('    </tr>');
+    _html.push('    <tr><td colspan="2" id="es_result"></td></tr>');
+    _html.push('</table>');
+    $("#es_div").append(_html.join(''));
     $("#es_command_line").focus();
 };
 
@@ -144,7 +144,7 @@ ErlShell.erlshell_init = function(rs) {
     ErlShell.process = 0,
     ErlShell.command_history = [];
     ErlShell.command_cursor = 0;
-    $("#es_div").html("");
+    $("#es_div").html('<div class="esshell_welcome">start at ' + rs.start_time + ', from ' + rs.client_ip + '</div>');
     //创建命令行
     ErlShell.create_es_command_line(ErlShell.line_num);
     //绑定命令行事件
@@ -175,7 +175,8 @@ ErlShell.erlshell_stop = function() {
 }
 
 $("#erlshell_action").click(function() {
-    if ( ErlShell.process == 1 ) {
+    if ( ErlShell.process == 1 ) 
+    {
         return false;
     }
     ErlShell.process = 1;

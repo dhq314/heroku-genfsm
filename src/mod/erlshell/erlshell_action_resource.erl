@@ -33,7 +33,7 @@ process_post(ReqData, Context) ->
                 case util:string_to_term(ActionCode) of
                     %% 创建ErlShell
                     1 ->    
-                        erlshell_create(ActionCode);
+                        erlshell_create(ActionCode, ReqData);
                     %% 关闭ErlShell
                     2 ->
                         erlshell_stop(PostQueryList, ActionCode);
@@ -50,12 +50,20 @@ process_post(ReqData, Context) ->
     {true, wrq:append_to_response_body(encode_json(Body), ReqData), Context}.
 
 %% @doc 创建ErlShell
-erlshell_create(ActionCode) ->
+erlshell_create(ActionCode, ReqData) ->
     LongUnixTime = util:longunixtime(),
     ProcessName = create_process_name(?MODULE, [LongUnixTime]),
     case erlshell_server:start_link([ProcessName, ?HEART_TIME_INTERVAL]) of
         {ok, _Pid} ->
-            [{result, 1}, {action, ActionCode}, {pid, ProcessName}, {interval, ?HEART_TIME_INTERVAL}, {line_num, 1}];
+            {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
+            Year1 = util:term_to_string(Year),
+            Month1 = util:term_to_string(Month),
+            Day1 = util:term_to_string(Day),
+            Hour1 = util:term_to_string(Hour),
+            Minute1 = util:term_to_string(Minute),
+            Second1 = util:term_to_string(Second),
+            StartTime = Year1 ++ "-" ++ Month1 ++ "-" ++ Day1 ++ " " ++ Hour1 ++ ":" ++ Minute1 ++ ":" ++ Second1,
+            [{result, 1}, {action, ActionCode}, {pid, ProcessName}, {interval, ?HEART_TIME_INTERVAL}, {line_num, 1}, {start_time, StartTime}, {client_ip, ReqData#wm_reqdata.peer}];
         _ ->
             [{result, 2}, {action, ActionCode}]
     end.

@@ -131,6 +131,10 @@ a:hover {
     overflow-y: auto;
     background-color: #EDEDED;
 }
+#es_div .esshell_welcome {
+    font: 14px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;
+    margin: 5px 5px 0;
+}
 #es_div table, #es_div tr, #es_div td {
     margin: 0;
     padding: 0;

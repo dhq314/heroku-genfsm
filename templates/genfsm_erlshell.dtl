@@ -20,7 +20,7 @@
                     <li>按上/下方向键显示历史命令</li>
                 </ul>
                 <div id="erlshell_readmore">
-                    <a href="http://dhq.me/deploy-erlang-web-shell-with-webmachine-erlydtl-on-heroku" title="在 heroku 上部署基于 webmachine + erlydtl 的 erlang web shell -- ErlShell" target="_blank">更多...</a>
+                    <a href="http://{{domain}}/deploy-erlang-web-shell-with-webmachine-erlydtl-on-heroku" title="在 heroku 上部署基于 webmachine + erlydtl 的 erlang web shell -- ErlShell" target="_blank">更多...</a>
                 </div>
             </div>
         </div>

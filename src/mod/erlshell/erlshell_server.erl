@@ -113,13 +113,14 @@ code_change(_OldVsn, State, _Extra) ->
 %% @doc 解析函数
 eval(ErlStr, Bindings) ->
     {ok, Tokens, _EndLocation} = erl_scan:string(ErlStr),
+    %% 表达式字符串后面要以点号结束
     NewTokens = 
         case lists:reverse(Tokens) of
             [{dot, _} | _] -> Tokens;
             TokensReverse -> lists:reverse([{dot, 1} | TokensReverse])
         end,
-    {ok, Expr} = erl_parse:parse_exprs(NewTokens),
-    erl_eval:exprs(Expr, Bindings).
+    {ok, ExprList} = erl_parse:parse_exprs(NewTokens),
+    erl_eval:exprs(ExprList, Bindings).
 
 %% @doc 检查表达式是否含有非法语句
 check_valid(ErlStr) ->
