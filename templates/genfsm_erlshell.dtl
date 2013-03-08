@@ -7,9 +7,22 @@
                 <li><a id="current" href="#">ErlShell</a></li>
             </ul>
         </div>
+        <div id="es_title">
+            a Erlang Web Shell base on Webmachine
+        </div>
         <div class="erlshell">
             <div id="es_div"></div>
             <button id="erlshell_action">Start</button>
+            <div id="erlshell_tips">
+                <ul>
+                    <li>按 "Start" 启动，"Stop" 关闭</li>
+                    <li>按回车（Enter）执行命令</li>
+                    <li>按上/下方向键显示历史命令</li>
+                </ul>
+                <div id="erlshell_readmore">
+                    <a href="http://dhq.me/deploy-erlang-web-shell-with-webmachine-erlydtl-on-heroku" title="在 heroku 上部署基于 webmachine + erlydtl 的 erlang web shell -- ErlShell" target="_blank">更多...</a>
+                </div>
+            </div>
         </div>
 
 <script type="text/javascript" src="http://{{domain}}/static/js/erlshell.js"></script>

@@ -1,3 +1,6 @@
+* {
+    -webkit-text-size-adjust: none;
+}
 body { 
     margin: 0; 
     padding: 0; 
@@ -113,10 +116,14 @@ a:hover {
 }
 
 .erlshell {
-    margin: 30px auto;
+    margin: 10px auto 30px;
     padding: 5px;
     width: 60%;
     position: relative;
+}
+#es_title {
+    margin: 5px 0;
+    text-align: center;
 }
 #es_div {
     border: 1px solid #EDEDED; 
@@ -141,6 +148,34 @@ a:hover {
 	cursor: pointer;
     background: #F0F0F0;
     color: #AAA;
+}
+#erlshell_tips {
+    position: absolute;
+    right: -170px;
+    top: 15px;
+    border: 1px solid #EDEDED;
+    font: 10px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;
+    padding: 10px 5px 5px;
+    border-radius: 5px;    
+}
+#erlshell_tips ul, #erlshell_tips ul li {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+#erlshell_tips ul {
+    margin-left: 15px;
+}
+#erlshell_tips ul li {
+    list-style-type: circle;
+}
+#erlshell_tips #erlshell_readmore {
+    margin: 5px 10px;
+    text-align: right;
+}
+#erlshell_readmore a, #erlshell_readmore a:active {
+    color: #AAAAAA;
+    outline: none;
 }
 .erlshell .es_line {
     width: 100%; 

@@ -7,7 +7,7 @@ var ErlShell = {
     "process" : 0,                                      //0标识当前没请求要处理，1反之
     "url" : "http://" + Domain + "/erlshellaction/",    //POST请求的地址
     "command_history" : [],                            	//使用过的历史命令
-	"command_cursor" : 0								//命令光标位置
+    "command_cursor" : 0								//命令光标位置
 };
 
 //创建命令行
