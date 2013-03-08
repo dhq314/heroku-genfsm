@@ -1,4 +1,12 @@
-{% include "genfsm_head.dtl" %}
+{% extends "genfsm_base.tpl" %}
+
+
+{% block other_css %}
+<link rel="stylesheet" type="text/css" media="all" href="http://{{domain}}/static/css/erlshell.css" />
+{% endblock %}
+
+
+{% block content %}
 
         <div class="nav">
             <ul>
@@ -25,7 +33,10 @@
             </div>
         </div>
 
-<script type="text/javascript" src="http://{{domain}}/static/js/erlshell.js"></script>
+{% endblock %}
 
-{% include "genfsm_foot.dtl" %}
+
+{% block other_js %}
+<script type="text/javascript" src="http://{{domain}}/static/js/erlshell.js"></script>
+{% endblock %}
 

@@ -1,4 +1,7 @@
-{% include "genfsm_head.dtl" %}
+{% extends "genfsm_base.tpl" %}
+
+
+{% block content %}
 
         <div class="nav">
             <ul>
@@ -18,5 +21,10 @@
 
         </div>
 
-{% include "genfsm_foot.dtl" %}
+{% endblock %}
+
+
+{% block other_js %}
+<script type="text/javascript" src="http://{{domain}}/static/js/tool.js"></script>
+{% endblock %}
 

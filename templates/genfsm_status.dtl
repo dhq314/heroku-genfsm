@@ -1,4 +1,7 @@
-{% include "genfsm_head.dtl" %}
+{% extends "genfsm_base.tpl" %}
+
+
+{% block content %}
 
         <div class="nav">
             <ul>
@@ -23,5 +26,5 @@
             <p>RequestTime：{{request_time}}</p>
         </div>
         
-{% include "genfsm_foot.dtl" %}
+{% endblock %}
 
