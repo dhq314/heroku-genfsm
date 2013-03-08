@@ -155,10 +155,10 @@ a:hover {
 }
 #erlshell_tips {
     position: absolute;
-    right: -170px;
+    right: -180px;
     top: 15px;
     border: 1px solid #EDEDED;
-    font: 10px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font: 11px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;
     padding: 10px 5px 5px;
     border-radius: 5px;    
 }
