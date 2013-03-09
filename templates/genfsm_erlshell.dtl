@@ -16,7 +16,7 @@
             </ul>
         </div>
         <div id="es_title">
-            a Erlang Web Shell host on Webmachine
+            a Erlang Web Shell host on Heroku
         </div>
         <div class="erlshell">
             <div id="es_div"></div>
