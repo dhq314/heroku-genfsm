@@ -65,6 +65,7 @@
 }
 #erlshell_readmore a, #erlshell_readmore a:active {
     color: #AAAAAA;
+	text-decoration: underline;
     outline: none;
 }
 #erlshell_readmore a:hover {
