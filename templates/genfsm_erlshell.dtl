@@ -37,6 +37,6 @@
 
 
 {% block other_js %}
-<script type="text/javascript" src="http://{{domain}}/static/js/erlshell_jsonp.js"></script>
+<script type="text/javascript" src="http://{{domain}}/static/js/erlshell.js"></script>
 {% endblock %}
 

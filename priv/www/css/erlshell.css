@@ -64,6 +64,10 @@
     color: #AAAAAA;
     outline: none;
 }
+#erlshell_readmore a:hover {
+	color: #00A9DA;
+	text-decoration: none;
+}
 .erlshell .es_line {
     width: 100%; 
     border: 0px solid #000;
