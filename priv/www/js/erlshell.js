@@ -42,7 +42,7 @@ ErlShell.bind_es_command_line_keypress = function() {
                     data = { "action" : 3, "pid" : ErlShell.pid, "erl_str" : erl_str };
                     $("#es_div").css({"background-color" : "#EDEDED"});
                     $.post(ErlShell.url, data, function(rs) {
-                        if ( parseInt(rs.action) == 3 )
+                        if ( rs.action == 3 )
                         {
                             $("#es_div").css({"background-color" : "#FFF"});
                             $("#es_result").html(rs.value);
@@ -192,7 +192,7 @@ $("#erlshell_action").click(function() {
         ErlShell.erlshell_stop();
     }
     $.post(ErlShell.url, data, function(rs) {
-        if ( rs.result == 1 && parseInt(rs.action, 10) == 1 )
+        if ( rs.result == 1 && rs.action == 1 )
         {
             //启动ErlShell
             ErlShell.erlshell_init(rs);
