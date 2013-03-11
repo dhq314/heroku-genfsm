@@ -42,7 +42,7 @@ ErlShell.bind_es_command_line_keypress = function() {
                     data = { "action" : 3, "pid" : ErlShell.pid, "erl_str" : erl_str };
                     $("#es_div").css({"background-color" : "#EDEDED"});
                     ErlShell.get_jsonp(data, function(rs) {
-                        if ( parseInt(rs.action) == 3 )
+                        if ( rs.action == 3 )
                         {
                             $("#es_div").css({"background-color" : "#FFF"});
                             $("#es_result").html(rs.value);

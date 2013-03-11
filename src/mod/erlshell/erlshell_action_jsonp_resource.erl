@@ -20,7 +20,7 @@ content_types_provided(ReqData, Context) ->
 
 to_jsonp(ReqData, Context) ->
     Return =
-        case wrq:get_qs_value("callback", ReqData) of
+        case wrq:get_qs_value("callback", ReqData) of           %% 获取回调函数名
             undefined ->
                 "error";
             CallBack ->
@@ -37,7 +37,7 @@ to_jsonp(ReqData, Context) ->
                         _ ->
                             [{result, 2}]
                     end,
-                CallBack ++ "(" ++ encode_json(JsonPropList) ++")"
+                CallBack ++ "(" ++ encode_json(JsonPropList) ++ ")"
         end,
     {Return, ReqData, Context}.
 
