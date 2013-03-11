@@ -67,14 +67,11 @@ init([]) ->
 	Egeoip = {egeoip, {egeoip, start_link, [egeoip]},
                 permanent, 5000, worker, [egeoip]},
 	
-	Ibrowse = {ibrowse, {ibrowse, start_link, []},
-                permanent, 5000, worker, [ibrowse]},
-	
     Web = {webmachine_mochiweb,
            {webmachine_mochiweb, start, [WebConfig]},
            permanent, 5000, worker, [mochiweb_socket_server]},
 	
-    Processes = [Egeoip, Ibrowse, Web],
+    Processes = [Egeoip, Web],
 
     {ok, { {one_for_one, 10, 10}, Processes} }.
 
