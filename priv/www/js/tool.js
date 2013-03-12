@@ -44,8 +44,10 @@ $(document).ready(function() {
                 jsonp : "callback",
                 data : {},
                 success : function(rs) {
-                    var _html = "<p>" + rs.catName + " " + rs.province + "</p>";
-                    $("#phone_sta").html(_html);
+                    $("#phone_sta").html("<p>" + rs.catName + " " + rs.province + "</p>");
+                },
+                error : function() {
+                    $("#phone_sta").html("<p style='color: red;'>获取数据失败！</p>");
                 }
             });
         }

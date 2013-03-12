@@ -20,6 +20,11 @@ ensure_started(App) ->
 start_link() ->
     ensure_started(inets),
     ensure_started(crypto),
+    application:start(public_key),
+    application:start(ssl),
+    application:start(xmerl),
+    application:start(compiler),
+    application:start(syntax_tools),
     ensure_started(mochiweb),
     application:set_env(webmachine, webmachine_logger_module, 
                         webmachine_logger),
@@ -31,20 +36,28 @@ start_link() ->
 start() ->
     ensure_started(inets),
     ensure_started(crypto),
+    application:start(public_key),
+    application:start(ssl),
+    application:start(xmerl),
+    application:start(compiler),
+    application:start(syntax_tools),
     ensure_started(mochiweb),
     application:set_env(webmachine, webmachine_logger_module, 
                         webmachine_logger),
     ensure_started(webmachine),
-	ensure_started(mnesia),
     application:start(genfsm).
 
 %% @spec stop() -> ok
 %% @doc Stop the genfsm server.
 stop() ->
     Res = application:stop(genfsm),
-	application:stop(mnesia),
     application:stop(webmachine),
     application:stop(mochiweb),
+    application:start(syntax_tools),
+    application:start(compiler),
+    application:stop(xmerl),
+    application:stop(ssl),
+    application:stop(public_key),
     application:stop(crypto),
     application:stop(inets),
     Res.
