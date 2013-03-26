@@ -135,7 +135,7 @@ ErlShell.erlshell_heart = function() {
 };
 
 //启动ErlShell
-ErlShell.erlshell_init = function(rs) {
+ErlShell.erlshell_start = function(rs) {
     //初始状态数据
     ErlShell.pid = rs.pid;
     ErlShell.interval = rs.interval;
@@ -188,30 +188,32 @@ ErlShell.get_jsonp = function(data, callbackfun) {
     });
 };
 
-$("#erlshell_action").click(function() {
-    if ( ErlShell.process == 1 ) 
-    {
-        return false;
-    }
-    ErlShell.process = 1;
-    var data = {};
-    if ( ErlShell.status == 1 )
-    {
-        data = { "action" : 1 };
-    }
-    else
-    {
-        data = { "action" : 2, "pid" : ErlShell.pid };
-        //关闭ErlShell
-        ErlShell.erlshell_stop();
-    }
-    ErlShell.get_jsonp(data, function(rs) {
-        if ( rs.result == 1 && rs.action == 1 )
+//初始ErlShell
+ErlShell.init = function(hook) {
+    $("#" + hook).click(function() {
+        if ( ErlShell.process == 1 ) 
         {
-            //启动ErlShell
-            ErlShell.erlshell_init(rs);
+            return false;
         }
-        ErlShell.process = 0
+        ErlShell.process = 1;
+        var data = {};
+        if ( ErlShell.status == 1 )
+        {
+            data = { "action" : 1 };
+        }
+        else
+        {
+            data = { "action" : 2, "pid" : ErlShell.pid };
+            //关闭ErlShell
+            ErlShell.erlshell_stop();
+        }
+        ErlShell.get_jsonp(data, function(rs) {
+            if ( rs.result == 1 && rs.action == 1 )
+            {
+                //启动ErlShell
+                ErlShell.erlshell_start(rs);
+            }
+            ErlShell.process = 0
+        });
     });
-});
-
+};
