@@ -111,7 +111,7 @@ get_process_name(ReqData) ->
 
 %% @doc 创建进程名
 create_process_name(Prefix, List) ->
-    util:to_atom(lists:concat(lists:flatten([Prefix | lists:map(fun(T) -> ['_', T] end, List)]))).
+    util:to_atom(lists:concat(lists:flatten([Prefix | [['_', T] || T <- List]]))).
 
 %% @doc 编成 json 格式
 encode_json(QueryString) -> 
