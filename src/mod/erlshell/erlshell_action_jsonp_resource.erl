@@ -55,7 +55,8 @@ erlshell_create(ReqData) ->
             Minute1 = util:term_to_string(Minute),
             Second1 = util:term_to_string(Second),
             StartTime = Year1 ++ "-" ++ Month1 ++ "-" ++ Day1 ++ " " ++ Hour1 ++ ":" ++ Minute1 ++ ":" ++ Second1,
-            [{result, 1}, {action, 1}, {pid, ProcessName}, {interval, ?HEART_TIME_INTERVAL}, {line_num, 1}, {start_time, StartTime}, {client_ip, ReqData#wm_reqdata.peer}];
+            SystemInfo = erlang:system_info(system_version),
+            [{result, 1}, {action, 1}, {pid, ProcessName}, {interval, ?HEART_TIME_INTERVAL}, {line_num, 1}, {start_time, StartTime}, {client_ip, ReqData#wm_reqdata.peer}, {system_info, SystemInfo}];
         _ ->
             [{result, 2}, {action, 1}]
     end.

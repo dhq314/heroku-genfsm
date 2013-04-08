@@ -144,7 +144,7 @@ ErlShell.erlshell_start = function(rs) {
     ErlShell.process = 0,
     ErlShell.command_history = [];
     ErlShell.command_cursor = 0;
-    $("#es_div").html('<div class="esshell_welcome">start at ' + rs.start_time + ', from ' + rs.client_ip + '</div>');
+    $("#es_div").html('<div class="esshell_welcome">start at ' + rs.start_time + ', from ' + rs.client_ip + '<br />' + rs.system_info + '</div>');
     //创建命令行
     ErlShell.create_es_command_line(ErlShell.line_num);
     //绑定命令行事件
