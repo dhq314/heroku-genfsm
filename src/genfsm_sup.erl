@@ -70,8 +70,12 @@ init([]) ->
     Web = {webmachine_mochiweb,
            {webmachine_mochiweb, start, [WebConfig]},
            permanent, 5000, worker, [mochiweb_socket_server]},
+
+    GenfsmServer = {genfsm_server,
+           {genfsm_server, start_link, []},
+           permanent, 5000, worker, [genfsm_server]},
 	
-    Processes = [Egeoip, Web],
+    Processes = [Egeoip, Web, GenfsmServer],
 
     {ok, { {one_for_one, 10, 10}, Processes} }.
 
