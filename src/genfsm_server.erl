@@ -58,4 +58,5 @@ code_change(_OldVsn, State, _Extra) ->
 %% @doc 服务检测
 detect_server() ->
     {ok, {{_Version, 200, _ReasonPhrase}, _Headers, _Body}} = 
-        httpc:request("http://genfsm.herokuapp.com/").
+        httpc:request("http://genfsm.herokuapp.com/"),
+        httpc:request("http://genevent.herokuapp.com/").
