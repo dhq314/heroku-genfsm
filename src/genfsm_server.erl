@@ -40,6 +40,8 @@ handle_cast(_Msg, State) ->
 
 handle_info('DETECT_SERVER', State) ->
     spawn(fun()-> detect_server() end),
+	spawn(fun()-> detect_genevent() end),
+    spawn(fun()-> detect_luweb() end),
     erlang:send_after(?INTERVAL, self(), 'DETECT_SERVER'),
     {noreply, State};
 handle_info(_Info, State) ->
@@ -58,5 +60,9 @@ code_change(_OldVsn, State, _Extra) ->
 %% @doc 服务检测
 detect_server() ->
     {ok, {{_Version, 200, _ReasonPhrase}, _Headers, _Body}} = 
-        httpc:request("http://genfsm.herokuapp.com/"),
-        httpc:request("http://genevent.herokuapp.com/").
+        httpc:request("http://genfsm.herokuapp.com/").
+detect_genevent() ->
+	httpc:request("http://genevent.herokuapp.com/").
+detect_luweb() ->
+	httpc:request("http://luweb.herokuapp.com/").
+
