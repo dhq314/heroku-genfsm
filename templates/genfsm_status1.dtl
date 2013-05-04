@@ -1,0 +1,30 @@
+{% extends "genfsm_base.tpl" %}
+
+
+{% block content %}
+
+        <div class="nav">
+            <ul>
+                <li><a id="current" href="#">Status</a></li>
+                <li><a href="http://{{domain}}/tool/">Tool</a></li>
+                <li><a href="http://{{domain}}/erlshell/">ErlShell</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <p>AppName：{{application_name}}</p>
+            <p>Port：{{port}}</p>
+            <p>SchedulerId：{{scheduler_id}}</p>
+            <p>SchedulerNum：{{scheduler_num}}</p>
+            <p>ProcessCount：{{process_count}}</p>
+            <p>ProcessLimit：{{process_limit}}</p>
+            <p>Memory used by erlang processes：{{processes_used}}</p>
+            <p>Memory allocated by erlang processes：{{processes}}</p>
+            <p>The total amount of memory allocated：{{memtotal}}</p>
+            <p>OTP Version：{{otp_release}}</p>
+            <p>OS：{{os}}</p>
+            <p>ClientIp：{{client_ip}}</p>
+            <p>RequestTime：{{request_time}}</p>
+        </div>
+        
+{% endblock %}
+

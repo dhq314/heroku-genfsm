@@ -17,18 +17,14 @@
     <div class="main">
         <div class="header">
             <h1>{{application_name}}</h1>
-            <h2>Just code for fun!<h2>
+            <h2>Just code for fun!</h2>
         </div>     
-
-
 
     {% block content %}
 
     {% endblock %}
 
-
-
-    <div class="footer">
+    	<div class="footer">
             Powered By&nbsp;:&nbsp;<a href="http://dhq.me/">D.H.Q的烂笔头</a>
         </div>    
     

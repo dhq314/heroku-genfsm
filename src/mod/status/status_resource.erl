@@ -1,5 +1,4 @@
-%% @author author <author@example.com>
-%% @copyright YYYY author.
+%% @author JoeDean <dhq314@gmail.com>
 %% @doc Example webmachine_resource.
 
 -module(status_resource).
@@ -41,21 +40,63 @@ to_html(ReqData, State) ->
     {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
     RequestTime = io_lib:format("~p-~p-~p ~p:~p:~p", [Year, Month, Day, Hour, Minute, Second]),
 
+	CutLen = 15,
+	ModuleList = code:all_loaded(),
+	ModuleListLen = length(ModuleList),
+	{RetModuleList, RemainModuleListLen} =
+		case ModuleListLen > CutLen of
+			true ->
+				{lists:sublist(ModuleList, CutLen), ModuleListLen - CutLen};
+			false ->
+				{ModuleList, 0}
+		end,
+	
+	ProcessList = erlang:processes(),
+	ProcessListLen = length(ProcessList),
+	{RetProcessList, RemainProcessListLen} =
+		case ProcessListLen > CutLen of
+			true ->
+				{lists:sublist(ProcessList, CutLen), ProcessListLen - CutLen};
+			false ->
+				{ProcessList, 0}
+		end,
+	RetProcessList1 = [util:term_to_string(Pid) || Pid <- RetProcessList],
+	
+	AppList = application:which_applications(),
+	
     HtmlData = [
         {domain, Domain},
         {application_name, ApplicationName}, 
         {port, Port},
-        {scheduler_id, SchedulerId},
-        {scheduler_num, SchedulerNum},
+		
+		{os, OS},
+		{compat_rel, erlang:system_info(compat_rel)},
+		{wordsize, erlang:system_info(wordsize)},
+		{smp_support, erlang:system_info(smp_support)},
+		{heap_type, erlang:system_info(heap_type)},
+		
+		{scheduler_id, SchedulerId},
+        {schedulers, SchedulerNum},
         {process_count, ProcessCount},
         {process_limit, ProcessLimit},
         {processes_used, ProcessesMemUsed},
         {processes, ProcessesMemAlloc},
         {memtotal, MemTotal},
-        {otp_release, OTP},
-        {os, OS},
+		
+		{hipe_architecture, erlang:system_info(hipe_architecture)},
+		{machine, erlang:system_info(machine)},
+		{otp_release, OTP},
         {client_ip, ReqData#wm_reqdata.peer}, 
-        {request_time, RequestTime}
+        {request_time, RequestTime},
+
+		{module_list, RetModuleList},
+		{remain_module_list_len, RemainModuleListLen},
+		
+		{process_list, RetProcessList1},
+		{remain_process_list_len, RemainProcessListLen},
+		
+		{app_list, AppList}
+        
     ],
 
     {ok, Html} = genfsm_status_dtl:render(HtmlData),

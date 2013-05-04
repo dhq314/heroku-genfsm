@@ -11,20 +11,60 @@
             </ul>
         </div>
         <div class="content">
-            <p>AppName：{{application_name}}</p>
-            <p>Port：{{port}}</p>
-            <p>SchedulerId：{{scheduler_id}}</p>
-            <p>SchedulerNum：{{scheduler_num}}</p>
-            <p>ProcessCount：{{process_count}}</p>
-            <p>ProcessLimit：{{process_limit}}</p>
-            <p>Memory used by erlang processes：{{processes_used}}</p>
-            <p>Memory allocated by erlang processes：{{processes}}</p>
-            <p>The total amount of memory allocated：{{memtotal}}</p>
-            <p>OTP Version：{{otp_release}}</p>
-            <p>OS：{{os}}</p>
-            <p>ClientIp：{{client_ip}}</p>
-            <p>RequestTime：{{request_time}}</p>
+        
+        	<div id="system_item" class="status_item">
+                <h3>System info:</h3>
+                <ul>
+                	<li>application_name: {{application_name}}</p>
+            		<li>listen_port: {{port}}</p>
+                    <li>os_type: {{os}}</li>
+                    <li>compat_rel: {{compat_rel}}</li>
+                    <li>wordsize: {{wordsize}}</li>
+                    <li>smp_support: {{smp_support}}</li>
+                    <li>heap_type: {{heap_type}}</li>
+                   	<li>scheduler_id: {{scheduler_id}}</li>
+                   	<li>schedulers: {{schedulers}}</li>
+			        <li>process_count: {{process_count}}</li>
+			        <li>process_limit: {{process_limit}}</li>
+			        <li>processes_memory_used: {{processes_used}}</li>
+			        <li>processes_memory_allocated: {{processes}}</li>
+			        <li>total_memory_allocated: {{memtotal}}</li>
+                    <li>hipe_architecture: {{hipe_architecture}}</li>
+                    <li>machine: {{machine}}</li>
+                    <li>otp_release: {{otp_release}}</li>
+            		<li>request_ip: {{client_ip}}</li>
+            		<li>request_time: {{request_time}}</li>
+                </ul>
+            </div>
+            <div id="process_item" class="status_item">
+                <h3>Processes:</h3>
+                <ul>
+                	{% for process_pid in process_list %}
+                		<li><a href="#">{{process_pid}}</a></li>
+                	{% endfor %}
+                	<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and {{remain_process_list_len}} more)</li>
+                </ul>
+         	</div>
+        	<div id="module_item" class="status_item">
+                <h3>Modules:</h3>
+                <ul>
+                	{% for module_name, module_address in module_list %}
+                		<li title="{{module_address}}">{{module_name}}</li>
+                	{% endfor %}
+                	<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and {{remain_module_list_len}} more)</li>
+                </ul>
+            </div>
+            <div id="application_item" class="status_item">
+          		<h3>Applications:</h3>
+                <ul>
+             		{% for app_name, app_desc, app_vsn in app_list %}
+                		<li title="{{app_desc}}">{{app_name}}</li>
+                	{% endfor %}
+                </ul>
+     		</div>
+     		
         </div>
+        <div style="clear: both;"></div>
         
 {% endblock %}
 
