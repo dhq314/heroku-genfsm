@@ -1,7 +1,7 @@
 -module(genfsm_server).
 -behaviour(gen_server).
 -define(SERVER, ?MODULE).
--define(INTERVAL, 30000).
+-define(INTERVAL, 60000).
 
 %% ------------------------------------------------------------------
 %% API Function Exports

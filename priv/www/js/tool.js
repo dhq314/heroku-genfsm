@@ -34,26 +34,22 @@ $(document).ready(function() {
 	});
     $("#phone_btn").click(function() {
 		var phone = $.trim($("#phone_inp").val());
-        if ( phone )
-        {
-            $.ajax({
-                type : "get",
-                async : false,
-                url : "http://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=" + phone,
-                dataType : "jsonp",
-                jsonp : "callback",
-                data : {},
-                success : function(rs) {
-                    $("#phone_sta").html("<p>" + rs.catName + " " + rs.province + "</p>");
-                },
-                error : function() {
-                    $("#phone_sta").html("<p style='color: red;'>获取数据失败！</p>");
-                }
-            });
+        if ( ! phone ) {
+            phone = "13701191098";
         }
-        else
-        {
-            $("#phone_sta").html("<p style='color: red;'>手机号码不能为空！</p>");
-        }
+        $.ajax({
+            type : "get",
+            async : false,
+            url : "http://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=" + phone,
+            dataType : "jsonp",
+            jsonp : "callback",
+            data : {},
+            success : function(rs) {
+                $("#phone_sta").html("<p>" + rs.catName + " " + rs.province + "</p>");
+            },
+            error : function() {
+                $("#phone_sta").html("<p style='color: red;'>获取数据失败！</p>");
+            }
+        });
 	});
 });
