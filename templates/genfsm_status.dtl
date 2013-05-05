@@ -39,8 +39,8 @@
             <div id="process_item" class="status_item">
                 <h3>Processes:</h3>
                 <ul>
-                	{% for process_pid in process_list %}
-                		<li><a href="#">{{process_pid}}</a></li>
+                	{% for process_pid, process_info in process_list %}
+                		<li><a class="vtip" title="{{process_info}}" href="javascript:void(0)">{{process_pid}}</a></li>
                 	{% endfor %}
                 	<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and {{remain_process_list_len}} more)</li>
                 </ul>
@@ -49,7 +49,7 @@
                 <h3>Modules:</h3>
                 <ul>
                 	{% for module_name, module_address in module_list %}
-                		<li title="{{module_address}}">{{module_name}}</li>
+                		<li class="vtip" title="{{module_address}}">{{module_name}}</li>
                 	{% endfor %}
                 	<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and {{remain_module_list_len}} more)</li>
                 </ul>
@@ -58,7 +58,7 @@
           		<h3>Applications:</h3>
                 <ul>
              		{% for app_name, app_desc, app_vsn in app_list %}
-                		<li title="{{app_desc}}">{{app_name}}</li>
+                		<li class="vtip" title="{{app_desc}}">{{app_name}}</li>
                 	{% endfor %}
                 </ul>
      		</div>
@@ -67,4 +67,10 @@
         <div style="clear: both;"></div>
         
 {% endblock %}
+
+{% block other_js %}
+<link rel="stylesheet" type="text/css" media="all" href="http://{{domain}}/static/css/vtip.css" />
+<script type="text/javascript" src="http://{{domain}}/static/js/vtip.js"></script>
+{% endblock %}
+
 

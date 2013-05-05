@@ -58,7 +58,7 @@ list_to_atom2(List) when is_list(List) ->
 	end.
 
 
-%% @spec is_string(List)-> yes|no|unicode  
+%% @doc is_string(List)-> yes|no|unicode  
 is_string([]) -> yes;
 is_string(List) -> is_string(List, non_unicode).
 
@@ -67,4 +67,11 @@ is_string([C|Rest], _) when C =< 65000 -> is_string(Rest, unicode);
 is_string([], non_unicode) -> yes;
 is_string([], unicode) -> unicode;
 is_string(_, _) -> no.
+
+%% @doc 列表乱序
+shuffle_list(List) -> shuffle_list(List, []).
+shuffle_list([], Acc) -> Acc;
+shuffle_list(List, Acc) ->
+	{Leading, [H | T]} = lists:split(random:uniform(length(List)) - 1, List),
+	shuffle_list(Leading ++ T, [H | Acc]).
 

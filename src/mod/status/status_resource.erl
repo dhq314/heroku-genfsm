@@ -40,8 +40,8 @@ to_html(ReqData, State) ->
     {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
     RequestTime = io_lib:format("~p-~p-~p ~p:~p:~p", [Year, Month, Day, Hour, Minute, Second]),
 
-	CutLen = 15,
-	ModuleList = code:all_loaded(),
+	CutLen = 20,
+	ModuleList = util:shuffle_list(code:all_loaded()),
 	ModuleListLen = length(ModuleList),
 	{RetModuleList, RemainModuleListLen} =
 		case ModuleListLen > CutLen of
@@ -51,7 +51,7 @@ to_html(ReqData, State) ->
 				{ModuleList, 0}
 		end,
 	
-	ProcessList = erlang:processes(),
+	ProcessList = util:shuffle_list(erlang:processes()),
 	ProcessListLen = length(ProcessList),
 	{RetProcessList, RemainProcessListLen} =
 		case ProcessListLen > CutLen of
@@ -60,7 +60,9 @@ to_html(ReqData, State) ->
 			false ->
 				{ProcessList, 0}
 		end,
-	RetProcessList1 = [util:term_to_string(Pid) || Pid <- RetProcessList],
+	%RetProcessList1 = [util:term_to_string(Pid) || Pid <- RetProcessList],
+	RetProcessList1 = access_process(RetProcessList, []),
+	
 	
 	AppList = application:which_applications(),
 	
@@ -101,4 +103,48 @@ to_html(ReqData, State) ->
 
     {ok, Html} = genfsm_status_dtl:render(HtmlData),
     {Html, ReqData, State}.
+
+
+%% ------------------------------------------------------------------
+%% Internal Function Definitions
+%% ------------------------------------------------------------------
+
+%% @doc 进程信息处理
+access_process([], ProcessPidList) ->
+	ProcessPidList;
+access_process([Pid | L], ProcessPidList) ->
+	ProcessInfo = erlang:process_info(Pid),
+%% 	io:format("~p~n", [ProcessInfo]),
+	ProcessText = "
+		current_function: ~p<br />
+		initial_call: ~p<br />
+		status: ~p<br />
+		message_queue_len: ~p<br />
+		links: ~p<br />
+		trap_exit: ~p<br />
+		error_handler: ~p<br />
+		priority: ~p<br />
+		group_leader: ~p<br />
+		heap_size: ~p<br />
+		total_heap_size: ~p<br />
+		stack_size: ~p<br />
+		reductions: ~p<br />
+	",
+	ProcessPropList = [
+		proplists:get_value(current_function, ProcessInfo),
+		proplists:get_value(initial_call, ProcessInfo),
+		proplists:get_value(status, ProcessInfo),
+		proplists:get_value(message_queue_len, ProcessInfo),
+		proplists:get_value(links, ProcessInfo),
+		proplists:get_value(trap_exit, ProcessInfo),
+	   	proplists:get_value(error_handler, ProcessInfo),
+		proplists:get_value(priority, ProcessInfo),
+		proplists:get_value(group_leader, ProcessInfo),
+		proplists:get_value(heap_size, ProcessInfo),
+		proplists:get_value(total_heap_size, ProcessInfo),
+		proplists:get_value(stack_size, ProcessInfo),
+		proplists:get_value(reductions, ProcessInfo)
+	],
+	Title = io_lib:format(ProcessText, ProcessPropList),
+	access_process(L, [{util:term_to_string(Pid), Title} | ProcessPidList]).
 
