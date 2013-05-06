@@ -40,7 +40,8 @@ to_html(ReqData, State) ->
     RequestTime = io_lib:format("~p-~p-~p ~p:~p:~p", [Year, Month, Day, Hour, Minute, Second]),
 
 	CutLen = 20,
-	ModuleList = util:shuffle_list(code:all_loaded()),
+%% 	ModuleList = util:shuffle_list(code:all_loaded()),
+	ModuleList = util:shuffle_list(erlang:loaded()),
 	ModuleListLen = length(ModuleList),
 	{RetModuleList, RemainModuleListLen} =
 		case ModuleListLen > CutLen of
@@ -49,6 +50,7 @@ to_html(ReqData, State) ->
 			false ->
 				{ModuleList, 0}
 		end,
+	RetModuleList1 = package_module_info(RetModuleList, []),
 	
 	ProcessList = util:shuffle_list(erlang:processes()),
 	ProcessListLen = length(ProcessList),
@@ -89,7 +91,7 @@ to_html(ReqData, State) ->
         {client_ip, ReqData#wm_reqdata.peer}, 
         {request_time, RequestTime},
 
-		{module_list, RetModuleList},
+		{module_list, RetModuleList1},
 		{remain_module_list_len, RemainModuleListLen},
 		
 		{process_list, RetProcessList1},
@@ -112,49 +114,32 @@ package_process_info([], ProcessPidList) ->
 	ProcessPidList;
 package_process_info([Pid | L], ProcessPidList) ->
 	ProcessInfoList = erlang:process_info(Pid),
-%% 	io:format("~p~n", [ProcessInfo]),
-%% 	ProcessText = "
-%% 		current_function: ~p<br />
-%% 		initial_call: ~p<br />
-%% 		status: ~p<br />
-%% 		message_queue_len: ~p<br />
-%% 		links: ~p<br />
-%% 		trap_exit: ~p<br />
-%% 		error_handler: ~p<br />
-%% 		priority: ~p<br />
-%% 		group_leader: ~p<br />
-%% 		heap_size: ~p<br />
-%% 		total_heap_size: ~p<br />
-%% 		stack_size: ~p<br />
-%% 		reductions: ~p<br />
-%% 	",
-%% 	ProcessPropList = [
-%% 		proplists:get_value(current_function, ProcessInfo),
-%% 		proplists:get_value(initial_call, ProcessInfo),
-%% 		proplists:get_value(status, ProcessInfo),
-%% 		proplists:get_value(message_queue_len, ProcessInfo),
-%% 		proplists:get_value(links, ProcessInfo),
-%% 		proplists:get_value(trap_exit, ProcessInfo),
-%% 	   	proplists:get_value(error_handler, ProcessInfo),
-%% 		proplists:get_value(priority, ProcessInfo),
-%% 		proplists:get_value(group_leader, ProcessInfo),
-%% 		proplists:get_value(heap_size, ProcessInfo),
-%% 		proplists:get_value(total_heap_size, ProcessInfo),
-%% 		proplists:get_value(stack_size, ProcessInfo),
-%% 		proplists:get_value(reductions, ProcessInfo)
-%% 	],
 	{ProcessText, ProcessPropList} = package_process_info(ProcessInfoList, "", []),
 	Title = io_lib:format(ProcessText, ProcessPropList),
-	package_process_info(L, [{util:term_to_string(Pid), Title} | ProcessPidList]).
+	package_process_info(L, [{util:term_to_string(Pid), re:replace(Title, "\'", "\`", [global, {return, list}])} | ProcessPidList]).
 package_process_info([], ProcessText, ProcessPropList) ->
 	{ProcessText, lists:reverse(ProcessPropList)};
 package_process_info([{ProcessKey, ProcessValue} | ProcessInfoList], ProcessText, ProcessPropList) ->
-	case lists:member(ProcessKey, [dictionary]) of
+%% 	case lists:member(ProcessKey, [dictionary]) of
+	case lists:member(ProcessKey, []) of
 		false ->
 			package_process_info(ProcessInfoList, ProcessText ++ util:term_to_string(ProcessKey) ++ ": ~p<br />", [ProcessValue | ProcessPropList]);
 		true ->
 			package_process_info(ProcessInfoList, ProcessText, ProcessPropList)
 	end.
+
+%% @doc 模块信息处理
+package_module_info([], ModuleList) ->
+	ModuleList;
+package_module_info([Module | L], ModuleList) ->
+	ModuleInfoList = Module:module_info(),
+	{ModuleText, ModulePropList} = package_module_info(ModuleInfoList, "", []),
+	Title = io_lib:format(ModuleText, ModulePropList),
+	package_module_info(L, [{Module, re:replace(Title, "\'", "\`", [global, {return, list}])} | ModuleList]).
+package_module_info([], ModuleText, ModulePropList) ->
+	{ModuleText, lists:reverse(ModulePropList)};
+package_module_info([{ModuleKey, ModuleValue} | ModuleInfoList], ModuleText, ModulePropList) ->
+	package_module_info(ModuleInfoList, ModuleText ++ util:term_to_string(ModuleKey) ++ ": ~p<br />", [ModuleValue | ModulePropList]).
 
 														   
 	

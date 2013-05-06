@@ -40,7 +40,7 @@
                 <h3>Processes:</h3>
                 <ul>
                 	{% for process_pid, process_info in process_list %}
-                		<li><a class="vtip" title="{{process_info}}" href="javascript:void(0)">{{process_pid}}</a></li>
+                		<li><a class="vtip" title='{{process_info}}' href="javascript:void(0)">{{process_pid}}</a></li>
                 	{% endfor %}
                 	<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and {{remain_process_list_len}} more)</li>
                 </ul>
@@ -48,8 +48,8 @@
         	<div id="module_item" class="status_item">
                 <h3>Modules:</h3>
                 <ul>
-                	{% for module_name, module_address in module_list %}
-                		<li class="vtip" title="{{module_address}}">{{module_name}}</li>
+                	{% for module_name, module_info in module_list %}
+                		<li><a class="vtip" title='{{module_info}}' href="javascript:void(0)">{{module_name}}</a></li>
                 	{% endfor %}
                 	<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and {{remain_module_list_len}} more)</li>
                 </ul>
@@ -68,9 +68,9 @@
         
 {% endblock %}
 
+
 {% block other_js %}
 <link rel="stylesheet" type="text/css" media="all" href="http://{{domain}}/static/css/vtip.css" />
 <script type="text/javascript" src="http://{{domain}}/static/js/vtip.js"></script>
 {% endblock %}
-
 
