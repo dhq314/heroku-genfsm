@@ -15,7 +15,7 @@ ErlShell.create_es_command_line = function(line_num) {
     var _html = [];
     _html.push('<table class="es_line">');
     _html.push('    <tr>');
-    _html.push('        <td class="es_num">' + line_num + '></td>');
+    _html.push('        <td class="es_num">', line_num, '></td>');
     _html.push('        <td class="es_str">');
     _html.push('            <div id="es_command_line" contenteditable="true"></div>');
     _html.push('        </td>');
