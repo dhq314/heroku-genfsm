@@ -14,7 +14,7 @@
 %% API Function Exports
 %% ------------------------------------------------------------------
 
--export([start_link/1]).
+-export([start_link/1, eval/1]).
 
 %% ------------------------------------------------------------------
 %% gen_server Function Exports
@@ -48,29 +48,12 @@ init([HeartTimeInterval]) ->
 
 handle_call({'EVAL_ERLSTR', ErlStr}, _From, State) ->
     LineNum = State#state.line_num + 1,
-    {NewValue, RetBindings} = 
-        case check_valid(ErlStr) of
-            true ->
-                try eval(ErlStr, State#state.bindings) of
-                    {value, Value, NewBindings} ->
-                        {Value, NewBindings}
-                catch
-                    _:Error ->
-                        {Error, State#state.bindings}
-                end;
-            false ->
-                {"illegal expression", State#state.bindings}
-        end,
-    RetState = State#state{
-        bindings = RetBindings,
+    {NewValue, NewBindings} = eval(ErlStr, State#state.bindings),
+    NewState = State#state{
+        bindings = NewBindings,
         line_num = LineNum
     },
-    RetValue =
-        case io_lib:printable_list(NewValue) of
-            true -> NewValue;
-            false -> util:term_to_string(NewValue)
-        end,
-    {reply, [{result, 1}, {value, RetValue}, {line_num, LineNum}], RetState};
+    {reply, [{result, 1}, {value, NewValue}, {line_num, LineNum}], NewState};
 handle_call(_Request, _From, State) ->
     {reply, ok, State}.
 
@@ -111,7 +94,28 @@ code_change(_OldVsn, State, _Extra) ->
 %% ------------------------------------------------------------------
 
 %% @doc 解析函数
+eval(ErlStr) ->
+	{Result, _Bindings} = eval(ErlStr, erl_eval:new_bindings()),
+	[{result, 1}, {value, Result}].
 eval(ErlStr, Bindings) ->
+	{NewValue, RetBindings} = 
+        case check_valid(ErlStr) of
+            true ->
+                try eval_action(ErlStr, Bindings) of
+                    {value, Value, NewBindings} ->
+                        {Value, NewBindings}
+                catch
+                    _:Error ->
+                        {Error, Bindings}
+                end;
+            false ->
+                {"illegal expression", Bindings}
+        end,
+    case io_lib:printable_list(NewValue) of
+        true -> {NewValue, RetBindings};
+        false -> {util:term_to_string(NewValue), RetBindings}
+    end.
+eval_action(ErlStr, Bindings) ->
     {ok, Tokens, _EndLocation} = erl_scan:string(ErlStr),
     %% 表达式字符串后面要以点号结束
     NewTokens = 

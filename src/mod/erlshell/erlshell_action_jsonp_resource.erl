@@ -34,6 +34,8 @@ to_jsonp(ReqData, Context) ->
                             erlshell_eval(ReqData);
                         "4" ->
                             erlshell_heart(ReqData);
+						"5" ->
+							eval_real_time(ReqData);
                         _ ->
                             [{result, 2}]
                     end,
@@ -71,7 +73,7 @@ erlshell_stop(ReqData) ->
     end,
     [{result, 1}, {action, 2}].
 
-%% @doc 解析 erlang 表达式字符串
+%% @doc 解析 Erlang 表达式字符串
 erlshell_eval(ReqData) ->
     case get_process_name(ReqData) of
         undefined ->
@@ -82,6 +84,11 @@ erlshell_eval(ReqData) ->
             Ret = gen_server:call(Pid, {'EVAL_ERLSTR', ErlStr}),
             [{action, 3} | Ret]
     end.
+
+%% @doc 即时解析 Erlang 表达式字符串
+eval_real_time(ReqData) ->
+	ErlStr = wrq:get_qs_value("erl_str", ReqData),
+	erlshell_server:eval(ErlStr).
 
 %% @doc ErlShell 的心跳包
 erlshell_heart(ReqData) ->
