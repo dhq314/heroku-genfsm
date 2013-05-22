@@ -5,7 +5,7 @@ var ErlShell = {
     "interval" : 10,                                    //心跳包定时间隔
     "line_num" : 1,                                     //ErlShell的行数
     "process" : 0,                                      //0标识当前没请求要处理，1反之
-    "url" : "http://" + Domain + "/erlshellactionjsonp/",    //POST请求的地址
+    "url" : "http://" + Domain + "/erlshellaction/",    //POST请求的地址
     "command_history" : [],                            	//使用过的历史命令
     "command_cursor" : 0								//命令光标位置
 };

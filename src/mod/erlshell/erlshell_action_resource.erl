@@ -3,8 +3,7 @@
     init/1,
     allowed_methods/2,
     content_types_provided/2,
-    to_json/2,
-    process_post/2
+    to_jsonp/2
 ]).
 -include_lib("webmachine/include/webmachine.hrl").
 
@@ -17,40 +16,35 @@ allowed_methods(ReqData, Context) ->
     {['GET', 'HEAD', 'POST'], ReqData, Context}.
 
 content_types_provided(ReqData, Context) ->
-    {[{"application/json", to_json}], ReqData, Context}.
+    {[{"application/json", to_jsonp}], ReqData, Context}.
 
-to_json(ReqData, Context) ->
-    {encode_json(wrq:req_qs(ReqData)), ReqData, Context}.
-
-%% @doc 处理客户端以 POST 方式传送过来的请求
-process_post(ReqData, Context) ->
-    PostQueryList = mochiweb_util:parse_qs(wrq:req_body(ReqData)),
-    Body = 
-        case proplists:get_value("action", PostQueryList) of
+to_jsonp(ReqData, Context) ->
+    Return =
+        case wrq:get_qs_value("callback", ReqData) of           %% 获取回调函数名
             undefined ->
-                [{result, 2}];
-            ActionCode ->
-                case util:string_to_term(ActionCode) of
-                    %% 创建ErlShell
-                    1 ->    
-                        erlshell_create(ActionCode, ReqData);
-                    %% 关闭ErlShell
-                    2 ->
-                        erlshell_stop(PostQueryList, ActionCode);
-                    %% 解析 erlang 表达式字符串
-                    3 ->
-                        erlshell_eval(PostQueryList, ActionCode);
-                    %% ErlShell 的心跳包请求
-                    4 ->
-                        erlshell_heart(PostQueryList, ActionCode);
-                    _ ->
-                        [{result, 2}]
-                end
+                "error";
+            CallBack ->
+                JsonPropList =
+                    case wrq:get_qs_value("action", ReqData) of  
+                        "1" ->
+                            erlshell_create(ReqData);
+                        "2" ->
+                            erlshell_stop(ReqData); 
+                        "3" ->
+                            erlshell_eval(ReqData);
+                        "4" ->
+                            erlshell_heart(ReqData);
+						"5" ->
+							eval_real_time(ReqData);
+                        _ ->
+                            [{result, 2}]
+                    end,
+                CallBack ++ "(" ++ encode_json(JsonPropList) ++ ")"
         end,
-    {true, wrq:append_to_response_body(encode_json(Body), ReqData), Context}.
+    {Return, ReqData, Context}.
 
 %% @doc 创建ErlShell
-erlshell_create(ActionCode, ReqData) ->
+erlshell_create(ReqData) ->
     LongUnixTime = util:longunixtime(),
     ProcessName = create_process_name(?MODULE, [LongUnixTime]),
     case erlshell_server:start_link([ProcessName, ?HEART_TIME_INTERVAL]) of
@@ -64,53 +58,62 @@ erlshell_create(ActionCode, ReqData) ->
             Second1 = util:term_to_string(Second),
             StartTime = Year1 ++ "-" ++ Month1 ++ "-" ++ Day1 ++ " " ++ Hour1 ++ ":" ++ Minute1 ++ ":" ++ Second1,
             SystemInfo = erlang:system_info(system_version),
-            [{result, 1}, {action, ActionCode}, {pid, ProcessName}, {interval, ?HEART_TIME_INTERVAL}, {line_num, 1}, {start_time, StartTime}, {client_ip, ReqData#wm_reqdata.peer}, {system_info, SystemInfo}];
+            [{result, 1}, {action, 1}, {pid, ProcessName}, {interval, ?HEART_TIME_INTERVAL}, {line_num, 1}, {start_time, StartTime}, {client_ip, ReqData#wm_reqdata.peer}, {system_info, SystemInfo}];
         _ ->
-            [{result, 2}, {action, ActionCode}]
+            [{result, 2}, {action, 1}]
     end.
 
 %% @doc 关闭ErlShell
-erlshell_stop(PostQueryList, ActionCode) ->
-    case get_process_name(PostQueryList) of
+erlshell_stop(ReqData) ->
+    case get_process_name(ReqData) of
         undefined ->
             skip;
         Pid ->
             exit(Pid, kill)
     end,
-    [{result, 1}, {action, ActionCode}].
+    [{result, 1}, {action, 2}].
 
-%% @doc 解析 erlang 表达式字符串
-erlshell_eval(PostQueryList, ActionCode) ->
-    case get_process_name(PostQueryList) of
+%% @doc 解析 Erlang 表达式字符串
+erlshell_eval(ReqData) ->
+    case get_process_name(ReqData) of
         undefined ->
             %% 进程异常关闭，通知前端重新启动 ErlShell
-            [{result, 31}, {action, ActionCode}];
+            [{result, 31}, {action, 3}];
         Pid ->
-            ErlStr = proplists:get_value("erl_str", PostQueryList),
+            ErlStr = wrq:get_qs_value("erl_str", ReqData),
             Ret = gen_server:call(Pid, {'EVAL_ERLSTR', ErlStr}),
-            [{action, ActionCode} | Ret]
+            [{action, 3} | Ret]
     end.
 
+%% @doc 即时解析 Erlang 表达式字符串
+eval_real_time(ReqData) ->
+	ErlStr = wrq:get_qs_value("erl_str", ReqData),
+	erlshell_server:eval(ErlStr).
+
 %% @doc ErlShell 的心跳包
-erlshell_heart(PostQueryList, ActionCode) ->
-    case get_process_name(PostQueryList) of
+erlshell_heart(ReqData) ->
+    case get_process_name(ReqData) of
         undefined ->
             %% 进程关闭，通知前端关掉定时器
-            [{result, 41}, {action, ActionCode}];
+            [{result, 41}, {action, 4}];
         Pid ->
             gen_server:cast(Pid, 'ERLSHELL_HEART'),
-            [{result, 1}, {action, ActionCode}]
+            [{result, 1}, {action, 4}]
     end.
 
 %% @doc 获取进程名字
-get_process_name(PostQueryList) ->
-    ProcessNameStr = proplists:get_value("pid", PostQueryList),
-    ProcessName = util:string_to_term(ProcessNameStr),
-    case whereis(ProcessName) of
-        Pid when is_pid(Pid) ->
-            Pid;
-        _ ->
-            undefined
+get_process_name(ReqData) ->
+    case wrq:get_qs_value("pid", ReqData) of
+        undefined ->
+            undefined;
+        ProcessNameStr ->
+            ProcessName = util:string_to_term(ProcessNameStr),
+            case whereis(ProcessName) of
+                Pid when is_pid(Pid) ->
+                    Pid;
+                _ ->
+                    undefined
+            end
     end.
 
 %% @doc 创建进程名
