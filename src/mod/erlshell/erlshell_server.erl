@@ -116,7 +116,8 @@ eval(ErlStr, Bindings) ->
         false -> {util:term_to_string(NewValue), RetBindings}
     end.
 eval_action(ErlStr, Bindings) ->
-    {ok, Tokens, _EndLocation} = erl_scan:string(ErlStr),
+	NewErlStr = io_format_convert_io_lib_format(ErlStr),
+    {ok, Tokens, _EndLocation} = erl_scan:string(NewErlStr),
     %% 表达式字符串后面要以点号结束
     NewTokens = 
         case lists:reverse(Tokens) of
@@ -140,3 +141,20 @@ check_valid([RE | R], ErlStr, Bool) ->
             check_valid(R, ErlStr, Bool)
     end.
 
+%% @doc io:format 转成 io_lib:format 输出
+io_format_convert_io_lib_format(ErlStr) ->
+	RE = "io\\:format\\((.*)\\]\\)",
+    case re:run(ErlStr, RE, [{capture, first, list}, ungreedy]) of
+        {match, _Match} ->
+            [Splitbefore, FormatParam, SplitAfter] = re:split(ErlStr, RE, [{return, list}, ungreedy, {parts, 3}]),
+			lists:concat([Splitbefore, "lists:flatten(io_lib:format(", FormatParam, "]))", SplitAfter]);
+        _ ->
+			RE1 = "io\\:format\\((.*)\\)",
+			case re:run(ErlStr, RE1, [{capture, first, list}, ungreedy]) of
+        		{match, _Match} ->
+					[Splitbefore, FormatParam, SplitAfter] = re:split(ErlStr, RE1, [{return, list}, ungreedy, {parts, 3}]),
+					lists:concat([Splitbefore, "lists:flatten(io_lib:format(", FormatParam, ", []))", SplitAfter]);
+				_ ->
+					ErlStr
+			end
+    end.

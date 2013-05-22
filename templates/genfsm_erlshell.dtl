@@ -38,5 +38,8 @@
 
 {% block other_js %}
 <script type="text/javascript" src="http://{{domain}}/static/js/erlshell.js"></script>
+<script type="text/javascript">
+ErlShell.init("erlshell_action");
+</script>
 {% endblock %}
 

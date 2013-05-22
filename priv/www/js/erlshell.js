@@ -5,7 +5,7 @@ var ErlShell = {
     "interval" : 10,                                    //心跳包定时间隔
     "line_num" : 1,                                     //ErlShell的行数
     "process" : 0,                                      //0标识当前没请求要处理，1反之
-    "url" : "http://" + Domain + "/erlshellaction/",    //POST请求的地址
+    "url" : "http://" + Domain + "/erlshellactionjsonp/",    //POST请求的地址
     "command_history" : [],                            	//使用过的历史命令
     "command_cursor" : 0								//命令光标位置
 };
@@ -41,7 +41,7 @@ ErlShell.bind_es_command_line_keypress = function() {
                 {
                     data = { "action" : 3, "pid" : ErlShell.pid, "erl_str" : erl_str };
                     $("#es_div").css({"background-color" : "#EDEDED"});
-                    $.post(ErlShell.url, data, function(rs) {
+                    ErlShell.get_jsonp(data, function(rs) {
                         if ( rs.action == 3 )
                         {
                             $("#es_div").css({"background-color" : "#FFF"});
@@ -62,7 +62,7 @@ ErlShell.bind_es_command_line_keypress = function() {
                         //alert(erl_str);
                         ErlShell.command_history.unshift(erl_str);
                         ErlShell.command_cursor = 0;
-                    }, "json");
+                    });
                 } 
                 else            //空行按回车键光标跳到下一行
                 {
@@ -125,17 +125,17 @@ ErlShell.erlshell_heart = function() {
         return false;
     }
     var data = { "action" : 4, "pid" : ErlShell.pid };
-    $.post(ErlShell.url, data, function(rs) {
+    ErlShell.get_jsonp(data, function(rs) {
         if ( rs.result == 41 )                      //进程异常关闭
         {
             ErlShell.erlshell_stop();
             alert("进程异常已关闭，请重新启动 ErlShell！"); 
         }
-    }, "json");
+    });
 };
 
 //启动ErlShell
-ErlShell.erlshell_init = function(rs) {
+ErlShell.erlshell_start = function(rs) {
     //初始状态数据
     ErlShell.pid = rs.pid;
     ErlShell.interval = rs.interval;
@@ -172,32 +172,48 @@ ErlShell.erlshell_stop = function() {
     $("#es_div").css({"background-color" : "#EDEDED"});
     ErlShell.reset_es_command_line_keypress();
     $(window).unbind('beforeunload');
-}
+};
 
-$("#erlshell_action").click(function() {
-    if ( ErlShell.process == 1 ) 
-    {
-        return false;
-    }
-    ErlShell.process = 1;
-    var data = {};
-    if ( ErlShell.status == 1 )
-    {
-        data = { "action" : 1 };
-    }
-    else
-    {
-        data = { "action" : 2, "pid" : ErlShell.pid };
-        //关闭ErlShell
-        ErlShell.erlshell_stop();
-    }
-    $.post(ErlShell.url, data, function(rs) {
-        if ( rs.result == 1 && rs.action == 1 )
+
+//获取jsonp函数
+ErlShell.get_jsonp = function(data, callbackfun) {
+    $.ajax({
+        type : "get",
+        async : false,
+        url : ErlShell.url,
+        dataType : "jsonp",
+        jsonp : "callback",
+        data : data,
+        success : callbackfun
+    });
+};
+
+//初始ErlShell
+ErlShell.init = function(hook) {
+    $("#" + hook).click(function() {
+        if ( ErlShell.process == 1 ) 
         {
-            //启动ErlShell
-            ErlShell.erlshell_init(rs);
+            return false;
         }
-        ErlShell.process = 0
-    }, "json");
-});
-
+        ErlShell.process = 1;
+        var data = {};
+        if ( ErlShell.status == 1 )
+        {
+            data = { "action" : 1 };
+        }
+        else
+        {
+            data = { "action" : 2, "pid" : ErlShell.pid };
+            //关闭ErlShell
+            ErlShell.erlshell_stop();
+        }
+        ErlShell.get_jsonp(data, function(rs) {
+            if ( rs.result == 1 && rs.action == 1 )
+            {
+                //启动ErlShell
+                ErlShell.erlshell_start(rs);
+            }
+            ErlShell.process = 0
+        });
+    });
+};

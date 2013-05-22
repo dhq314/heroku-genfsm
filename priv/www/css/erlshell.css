@@ -16,6 +16,7 @@
     height: 360px;
     overflow-y: auto;
     background-color: #EDEDED;
+    padding: 0 5px 10px;
 }
 #es_div .esshell_welcome {
     font: 14px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -90,5 +91,7 @@
     width: 100%;
     height: 100%;
     outline: none !important;
+    background-color: #F0FBFD;
+    color: #000;
 }
 
